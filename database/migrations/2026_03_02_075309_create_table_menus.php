@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->enum('role',['admin','manager','pelanggan','staff']);
-            $table->rememberToken();
+        Schema::create('table_menus', function (Blueprint $table) {
+            $table->id('id_menu');
+            $table->id('category_id');
+            $table->string('menu');
+            $table->integer('price');
+            $table->integer('stock');
+            $table->enum('is_avaliable',['ada','kosong']);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('table_menus');
     }
 };
