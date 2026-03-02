@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('table_menus', function (Blueprint $table) {
             $table->id('id_menu');
-            $table->id('category_id');
+            $table->unsignedBigInteger('category_id');
             $table->string('menu');
             $table->integer('price');
             $table->integer('stock');
             $table->enum('is_avaliable',['ada','kosong']);
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id_category')->on('table_categories')->onDelete('cascade');
         });
     }
 
