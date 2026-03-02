@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('menu');
             $table->integer('price');
             $table->integer('stock');
-            $table->enum('is_avaliable',['ada','kosong']);
+            $table->enum('is_available',['ada','kosong']);
             $table->timestamps();
+            
 
             $table->foreign('category_id')->references('id_category')->on('table_categories')->onDelete('cascade');
         });
