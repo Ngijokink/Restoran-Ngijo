@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Handlers\AuthHandler;
+use App\Helpers\ResponseHelpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisRequest;
@@ -23,12 +24,9 @@ class AuthController extends Controller
         try{
         $request->validated();
         $user = $this->handler->register($request);
-        return response()->json([
-            'message' => 'Akun Berhasil Dibuat',
-            $user
-        ]);
+        return ResponseHelpers::success($user,'Akun Berhasil Dibuat');
         } catch(\Throwable $e){
-            return response()->json($e->getMessage());
+            return ResponseHelpers::error(null, 'Gagal Melakukan Register');
         }
     }
 
@@ -40,27 +38,26 @@ class AuthController extends Controller
         $token = $this->handler->login($request);
 
         if (!$token) {
-            return response()->json([
-                'message' => 'Email atau password salah'
-            ], 401);
+            return ResponseHelpers::error(null, 'Email atau password salah', 401);
         }
 
-        return response()->json($token);
+        return ResponseHelpers::success($token, 'Login berhasil');
 
     } catch (\Throwable $e) {
-        return response()->json([
-            'error' => $e->getMessage()
-        ]);
+        return ResponseHelpers::error(null, $e->getMessage(), 500);
     }
 }
 
-    public function logout(Request $request){
-        try{
-            $request->user()->currentAccessToken()->delete();
-        } catch(\Throwable $e){
-            return response()->json([
-                $e->getMessage()
-            ]);
-        }
+public function logout(Request $request)
+{
+    try {
+
+        $request->user()->currentAccessToken()->delete();
+
+        return ResponseHelpers::success(null, 'Logout berhasil');
+
+    } catch (\Throwable $e) {
+        return ResponseHelpers::error(null, $e->getMessage(), 500);
     }
+}
 }

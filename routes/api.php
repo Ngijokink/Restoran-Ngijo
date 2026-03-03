@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\CrudMenusController;
 // Authentication Routes
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/register',[AuthController::class,'register']);
-Route::middleware(['auth:sanctum', 'role:guru'])->group(function (){
+Route::middleware(['auth:sanctum'])->group(function (){
     // Routes for Categories
     Route::get('/categories', [CrudCatController::class, 'index']);
     Route::get('/categories/{id}', [CrudCatController::class, 'show']);
