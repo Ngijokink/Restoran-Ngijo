@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Menu;
-use App\Models\OrderItem;
+use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -30,7 +30,7 @@ class OrderService
                 $subtotal = $menu->price * $item['quantity'];
                 $total += $subtotal;
 
-                OrderItem::create([
+                Item::create([
                     'order_id' => $order->id,
                     'menu_id' => $item['menu_id'],
                     'quantity' => $item['quantity'],
