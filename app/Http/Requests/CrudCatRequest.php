@@ -13,9 +13,10 @@ class CrudCatRequest extends FormRequest
     public function rules()
     {
         return [
-            'category' => 'required|string|max:255',
+            'category' => 'required|string|max:255|unique:table_categories,category,' . $this->route('id_category') . ',id_category',
         ];
     }
+    
 
     
     

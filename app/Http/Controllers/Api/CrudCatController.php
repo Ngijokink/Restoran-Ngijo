@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-use App\Repositories\Interfaces\CrudCatInterface;
+use App\Interfaces\CrudCatInterface;
 use Illuminate\Http\Request;
 use App\Requests\CrudCatRequest;
 

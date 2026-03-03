@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Repositories\Interfaces\CrudMenusInterface;
+use App\Interfaces\CrudMenusInterface;
 
 
     class MenusController extends Controller

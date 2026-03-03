@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transaksi', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('id_orders');
+            $table->foreign('id_orders')->references('id_order')->on('table_orders')->onDelete('cascade');
             $table->decimal('total', 10, 2);
             $table->string('method');
-            $table->string('status')->default('pending');
+            $table->string('status')->default(  'pending');
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_transaction');
+        Schema::dropIfExists('transaksi');
     }
 };
