@@ -46,5 +46,21 @@ class OrderService
             return $order;
         });
     }
+    public function generateOrderCode($date , $lastOrder)
+    {
+        $date = date('Ymd');
+
+        $lastOrder = Order::whereDate('created_at', date('Y-m-d'))
+            ->orderBy('created_at', 'desc')
+            ->first();
+    if ($lastOrder) {
+            $number = 1;
+        } else {
+        $lastOrder = substr($lastOrder->order_code, -4);
+        $number = (int)$lastOrder + 1;
+        }
+
+        return 'ORD-' . $date . '-' . str_pad($number, 4, '0', STR_PAD_LEFT);
+    }
 }
 
