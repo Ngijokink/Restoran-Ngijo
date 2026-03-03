@@ -14,17 +14,21 @@ class AuthHandler{
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-        
         ]);
         return $create;
     }
-    public function login($request){
-        $user = $this->repo->findEmail($request);
-        if(!$user || !Hash::check($request->password,$user->password)){
+    public function login($request)
+{
+    $user = $this->repo->findEmail($request->email);
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
             return null;
         }
-        $token = $user->createToken('token_login')->plainTextToken;
 
-        return $token;
-    }
+    $token = $user->createToken('api_token')->plainTextToken;
+
+    return [
+        'token' => $token
+    ];
+}
 }

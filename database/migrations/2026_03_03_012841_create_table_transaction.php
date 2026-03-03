@@ -12,13 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transaksi', function (Blueprint $table) {
+<<<<<<< HEAD
             $table->unsignedBigInteger('id_orders');
             $table->foreign('id_orders')->references('id_order')->on('table_orders')->onDelete('cascade');
+=======
+            $table->id();
+            $table->unsignedBigInteger('order_id');
+>>>>>>> 52eff5d (fix: Users Model)
             $table->decimal('total', 10, 2);
             $table->string('method');
             $table->string('status')->default(  'pending');
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('order_id')->references('id_order')->on('table_orders')->onDelete('cascade');
         });
     }
 

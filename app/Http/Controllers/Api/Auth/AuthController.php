@@ -32,18 +32,27 @@ class AuthController extends Controller
         }
     }
 
-    public function login(LoginRequest $request){
-        try{
-            
+    public function login(LoginRequest $request)
+{
+    try {
+
         $request->validated();
         $token = $this->handler->login($request);
-        return $token;
-        } catch(\Throwable $e){
+
+        if (!$token) {
             return response()->json([
-                $e->getMessage()
-            ]);
+                'message' => 'Email atau password salah'
+            ], 401);
         }
+
+        return response()->json($token);
+
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage()
+        ]);
     }
+}
 
     public function logout(Request $request){
         try{
