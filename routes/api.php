@@ -36,3 +36,4 @@ Route::middleware(['auth:sanctum', 'role:guru'])->group(function (){
     Route::delete('/menus/{id}', [CrudMenusController::class, 'destroy']);  
     
 });
+//code
