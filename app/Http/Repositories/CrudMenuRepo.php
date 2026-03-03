@@ -1,34 +1,34 @@
 <?php
 namespace App\Repositories;
-use App\Models\User;
+use App\Models\Menu;
+use App\Interfaces\CrudMenusInterface;
 use Illuminate\Database\Eloquent\Model;
-use App\Repositories\Interfaces\CrudCatInterface;
 
-class CrudCatRepo implements CrudCatInterface
+class CrudMenuRepo implements CrudMenusInterface
 {
     protected $model;
 
-    public function __construct(User $model)
+    public function __construct(Menu $model)
     {
         $this->model = $model;
     }
 
-    public function allCategory()
+    public function allMenu()
     {
         return $this->model->all();
     }
 
-    public function findCategory($id)
+    public function findMenu($id)
     {
         return $this->model->find($id);
     }
 
-    public function createCategory(array $data)
+    public function createMenu(array $data)
     {
         return $this->model->create($data);
     }
 
-    public function updateCategory($id, array $data)
+    public function updateMenu($id, array $data)
     {
         $record = $this->model->find($id);
         if ($record) {
@@ -38,7 +38,7 @@ class CrudCatRepo implements CrudCatInterface
         return null;
     }
 
-    public function deleteCategory($id)
+    public function deleteMenu($id)
     {
         $record = $this->model->find($id);
         if ($record) {
