@@ -21,4 +21,16 @@ Route::post('/logout',[AuthController::class,'logout']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+    Route::get('/categories', [CrudCatController::class, 'index']);
+    Route::get('/categories/{id}', [CrudCatController::class, 'show']);
+    Route::post('/categories', [CrudCatController::class, 'store']);
+    Route::put('/categories/{id}', [CrudCatController::class, 'update']);
+    Route::delete('/categories/{id}', [CrudCatController::class, 'destroy']);
+    Route::get('/menus', [MenusController::class, 'index']);
+    Route::get('/menus/{id}', [MenusController::class, 'show']);
+    Route::post('/menus', [MenusController::class, 'store']);
+    Route::put('/menus/{id}', [MenusController::class, 'update']);
+    Route::delete('/menus/{id}', [MenusController::class, 'destroy']);  
+
 });
+
