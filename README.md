@@ -1,66 +1,219 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🍽️ RESTORAN NGIJO
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Sistem Manajemen Restoran Berbasis Laravel
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🟢 Tentang Project
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**RESTORAN NGIJO** adalah sistem manajemen restoran berbasis **Laravel** yang dibuat untuk membantu pengelolaan:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* 🧾 Pemesanan makanan
+* 💰 Transaksi & pembayaran
+* 📦 Manajemen menu & stok
+* 👨‍🍳 Dashboard admin & kasir
+* 📊 Laporan penjualan
 
-## Learning Laravel
+Project ini dibuat dengan konsep modern, clean, dan dominan warna hijau sesuai nama *NGIJO* 🌿
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🚀 Fitur Utama
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+✨ **Authentication System**
 
-## Laravel Sponsors
+* Login & Register
+* Role: Admin / Kasir
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+🍔 **Manajemen Menu**
 
-### Premium Partners
+* Tambah, edit, hapus menu
+* Upload gambar menu
+* Kategori makanan & minuman
+* Stok otomatis berkurang saat transaksi
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+🛒 **Sistem Pemesanan**
 
-## Contributing
+* Tambah ke keranjang
+* Hitung total otomatis
+* Pajak & diskon (optional)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+💳 **Transaksi**
 
-## Code of Conduct
+* Cetak struk
+* Status pembayaran
+* Riwayat transaksi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+📊 **Dashboard**
 
-## Security Vulnerabilities
+* Total pendapatan
+* Total transaksi
+* Menu terlaris
+* Grafik penjualan
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+📦 **Database Relasi**
 
-## License
+* Users
+* Categories
+* Menus
+* Orders
+* Order Details
+* Transactions
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🛠️ Tech Stack
+
+* ⚡ Laravel
+* 🐘 MySQL
+* 🎨 Bootstrap / Tailwind
+* 🧠 JavaScript
+* 📦 Composer
+* 🔐 Laravel Auth
+
+---
+
+## 📂 Struktur Folder Penting
+
+```
+app/
+ ├── Http/
+ │    ├── Controllers/
+ │    ├── Middleware/
+ │
+database/
+ ├── migrations/
+ ├── seeders/
+ 
+resources/
+ ├── views/
+ ├── css/
+ ├── js/
+ 
+routes/
+ ├── web.php
+```
+
+---
+
+## ⚙️ Cara Install Project
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/username/restoran-ngijo.git
+cd restoran-ngijo
+```
+
+### 2️⃣ Install Dependency
+
+```bash
+composer install
+npm install
+```
+
+### 3️⃣ Setup Environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4️⃣ Buat Database
+
+Buat database di MySQL dengan nama:
+
+```
+restongijo
+```
+
+Lalu atur `.env`:
+
+```
+DB_DATABASE=restongijo
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 5️⃣ Migrasi Database
+
+```bash
+php artisan migrate --seed
+```
+
+### 6️⃣ Jalankan Server
+
+```bash
+php artisan serve
+```
+
+Akses di:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## 📸 Preview Tampilan
+
+### 🟢 Halaman Dashboard
+
+* Statistik penjualan
+* Grafik transaksi
+* Ringkasan menu
+
+### 🍽️ Halaman Menu
+
+* Card menu modern
+* Gambar makanan
+* Tombol tambah ke keranjang
+
+### 🧾 Halaman Transaksi
+
+* Detail pesanan
+* Total harga
+* Tombol bayar & cetak
+
+---
+
+## 🧩 Relasi Database (ERD Sederhana)
+
+```
+User
+ └── hasMany Orders
+
+Order
+ └── hasMany OrderDetails
+
+Menu
+ └── belongsTo Category
+```
+
+---
+
+## 🔥 Future Improvement
+
+* 📱 Responsive lebih maksimal
+* 🖨️ Print thermal receipt
+* 📊 Export laporan ke Excel
+* 💳 Payment Gateway
+* 🧠 Sistem rekomendasi menu
+
+---
+
+## 👨‍💻 Developer
+
+Dikembangkan oleh:
+**NgijoKink** 🚀
+
+SMK RPL — Future Web Developer
+
+---
+
+## 📜 License
+
+Project ini dibuat untuk kebutuhan pembelajaran dan portfolio.
+
+
+Tinggal bilang aja, kita bikin makin gila tampilannya 🔥
