@@ -16,33 +16,6 @@ class AuthController extends Controller
             'password' => 'required|min:8'
             ]);
         
-        $create = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        
-        ]);
-        return response()->json([
-            'message' => 'Akun Berhasil Dibuat',
-            $create
-        ]);
-    }
-
-    public function login(Request $request){
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8'
-            ]);
-        $user = User::where('email', $request->email)->first();
-        if(!$user || !Hash::check($request->password,$user->password)){
-            return null;
-        }
-        $token = $user->createToken('token_login')->plainTextToken;
-
-        return $token;
-    }
-
-    public function logout(Request $request){
-        $request->user()->currentAccessToken()->delete();
+        $create = User::create($validated);
     }
 }
