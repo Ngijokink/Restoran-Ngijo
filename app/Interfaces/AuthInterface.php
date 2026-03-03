@@ -5,3 +5,4 @@ interface AuthInterface{
     public function create($data);
     public function findEmail($email);
 }
+//interfaces 
