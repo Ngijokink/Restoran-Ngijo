@@ -15,6 +15,6 @@ class AuthController extends Controller
             'password' => 'required|min:8'
             ]);
         
-        $create = User::create($validated)
+        $create = User::create($validated);
     }
 }
