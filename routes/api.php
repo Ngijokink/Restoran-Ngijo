@@ -3,8 +3,8 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Auth\CrudCatController;
-use App\Http\Controllers\Api\Auth\MenusController;
+use App\Http\Controllers\Api\CrudCatController;
+use App\Http\Controllers\Api\CrudMenusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,25 +19,20 @@ use App\Http\Controllers\Api\Auth\MenusController;
 // Authentication Routes
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/register',[AuthController::class,'register']);
-Route::post('/logout',[AuthController::class,'logout']);
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-
+Route::middleware(['auth:sanctum', 'role:guru'])->group(function (){
     // Routes for Categories
     Route::get('/categories', [CrudCatController::class, 'index']);
     Route::get('/categories/{id}', [CrudCatController::class, 'show']);
     Route::post('/categories', [CrudCatController::class, 'store']);
     Route::put('/categories/{id}', [CrudCatController::class, 'update']);
     Route::delete('/categories/{id}', [CrudCatController::class, 'destroy']);
-
-
+    Route::post('/logout',[AuthController::class,'logout']);
+    
     // Routes for Menus
-    Route::get('/menus', [MenusController::class, 'index']);
-    Route::get('/menus/{id}', [MenusController::class, 'show']);
-    Route::post('/menus', [MenusController::class, 'store']);
-    Route::put('/menus/{id}', [MenusController::class, 'update']);
-    Route::delete('/menus/{id}', [MenusController::class, 'destroy']);  
-
+    Route::get('/menus', [CrudMenusController::class, 'index']);
+    Route::get('/menus/{id}', [CrudMenusController::class, 'show']);
+    Route::post('/menus', [CrudMenusController::class, 'store']);
+    Route::put('/menus/{id}', [CrudMenusController::class, 'update']);
+    Route::delete('/menus/{id}', [CrudMenusController::class, 'destroy']);  
+    
 });
-

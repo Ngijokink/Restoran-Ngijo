@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 use App\Interfaces\CrudCatInterface;
 use Illuminate\Http\Request;
 use App\Requests\CrudCatRequest;
