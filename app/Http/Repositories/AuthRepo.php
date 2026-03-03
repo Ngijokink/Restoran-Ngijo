@@ -18,3 +18,4 @@ class AuthRepo implements AuthInterface{
         return $this->model->create($data);
     }
 }
+//check

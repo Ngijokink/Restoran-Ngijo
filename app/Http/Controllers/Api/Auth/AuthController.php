@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Handlers\AuthHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisRequest;
@@ -12,38 +13,45 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    protected $repo;
-        public function __construct(AuthInterface $repo){
-        $this->repo = $repo;
+    protected $handler;
+        public function __construct( AuthHandler $handler){
+
+        $this->handler = $handler;
     }
     public function register(RegisRequest $request){
       
+        try{
         $request->validated();
-        $create = $this->repo->create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        
-        ]);
+        $user = $this->handler->register($request);
         return response()->json([
             'message' => 'Akun Berhasil Dibuat',
-            $create
+            $user
         ]);
+        } catch(\Throwable $e){
+            return response()->json($e->getMessage());
+        }
     }
 
     public function login(LoginRequest $request){
-
+        try{
+            
         $request->validated();
-        $user = $this->repo->findEmail($request);
-        if(!$user || !Hash::check($request->password,$user->password)){
-            return null;
-        }
-        $token = $user->createToken('token_login')->plainTextToken;
-
+        $token = $this->handler->login($request);
         return $token;
+        } catch(\Throwable $e){
+            return response()->json([
+                $e->getMessage()
+            ]);
+        }
     }
 
     public function logout(Request $request){
-        $request->user()->currentAccessToken()->delete();
+        try{
+            $request->user()->currentAccessToken()->delete();
+        } catch(\Throwable $e){
+            return response()->json([
+                $e->getMessage()
+            ]);
+        }
     }
 }
