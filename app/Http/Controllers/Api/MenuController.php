@@ -31,7 +31,7 @@ use App\Helpers\UploadHelper;
 
         $data = $request->all();
         $data['image'] = $imagePath;
-        return ResponseHelpers::create($data);
+        return ResponseHelpers::success($this->repository->createMenu($data),'Berhasil Membuat Menu');
 
 
     }
