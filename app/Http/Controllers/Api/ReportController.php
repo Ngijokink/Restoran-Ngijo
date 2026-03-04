@@ -44,7 +44,7 @@ class ReportController extends Controller
         return response()->json($reportData);
     }
     
-    public function pdfReport(Request $request)
+    public function pdf(Request $request)
     {
         $date = $request->input('date') ?? now()->toDateString();
         $reportData = $this->repository->generateDailyReport($date);
