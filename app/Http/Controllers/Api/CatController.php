@@ -24,7 +24,7 @@ class CatController extends Controller
 
     public function show($id)
     {
-        return response()->json($this->repository->findCategory($id));
+        return ResponseHelpers::success($this->repository->findCategory($id),'Data Category');
     }
 
     public function store(CatRequest $request)
@@ -38,11 +38,15 @@ class CatController extends Controller
     public function update(CatRequest $request, $id)
     {
         $data = $request->all();
-        return response()->json($this->repository->updateCategory($id, $data));
+        $repo = $this->repository->updateCategory($id, $data);
+        $resource = new CategoryResource($repo);
+        return ResponseHelpers::success($resource,'Berhasil Mengupdate Category');
     }
 
     public function destroy($id)
     {
-        return response()->json($this->repository->deleteCategory($id));
+        $repo = $this->repository->deleteCategory($id);
+        $resource = new CategoryResource($repo);
+        return ResponseHelpers::success($resource,'Berhasil Menghapus Category');
     }
 }

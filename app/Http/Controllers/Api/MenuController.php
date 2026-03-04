@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api;
+use App\Helpers\ResponseHelpers;
 use Illuminate\Http\Request;
 use App\Interfaces\MenusInterface;
 use App\Http\Controllers\Controller;
@@ -16,12 +17,12 @@ use App\Helpers\UploadHelper;
 
     public function index()
     {
-        return response()->json($this->repository->allMenu());
+        return ResponseHelpers::success($this->repository->allMenu(),'Data Menu');
     }
 
     public function show($id)
     {
-        return response()->json($this->repository->findMenu($id));
+        return ResponseHelpers::success($this->repository->findMenu($id),'Data Menu');
     }
 
     public function store(Request $request)
@@ -30,20 +31,20 @@ use App\Helpers\UploadHelper;
 
         $data = $request->all();
         $data['image'] = $imagePath;
-        return response()->json($this->repository->createMenu($data));
-        
+        return ResponseHelpers::create($data);
+
 
     }
 
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        return response()->json($this->repository->updateMenu($id, $data));
+        return ResponseHelpers::success($this->repository->updateMenu($id, $data),'Berhasil Mengupdate Menu');
     }
 
     public function destroy($id)
     {
-        return response()->json($this->repository->deleteMenu($id));
+        return ResponseHelpers::success($this->repository->deleteMenu($id),'Berhasil Menghapus Menu');
     }
     public function uploadImage(Request $request)
     {
@@ -52,6 +53,6 @@ use App\Helpers\UploadHelper;
             $path = $this->repository->UploadImage($file);
             return response()->json(['path' => $path]);
         }
-        return response()->json(['error' => 'No file uploaded'], 400);
+        return ResponseHelpers::error(null, 'No file uploaded', 400);
     }
 }
