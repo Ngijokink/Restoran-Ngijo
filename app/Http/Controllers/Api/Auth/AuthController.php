@@ -29,6 +29,16 @@ class AuthController extends Controller
             return ResponseHelpers::error(null, 'Gagal Melakukan Register');
         }
     }
+    public function registerAdmin(RegisRequest $request){
+      
+        try{
+        $request->validated();
+        $user = $this->handler->registerAdmin($request);
+        return ResponseHelpers::success($user,'Akun Berhasil Dibuat');
+        } catch(\Throwable $e){
+            return ResponseHelpers::error(null, 'Gagal Melakukan Register');
+        }
+    }
 
     public function login(LoginRequest $request)
 {

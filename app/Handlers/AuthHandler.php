@@ -17,6 +17,15 @@ class AuthHandler{
         ]);
         return $create;
     }
+    public function registerAdmin($request){
+        $create = $this->repo->create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => 'admin'
+        ]);
+        return $create;
+    }
     public function login($request)
 {
     $user = $this->repo->findEmail($request->email);
