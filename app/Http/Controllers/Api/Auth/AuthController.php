@@ -41,7 +41,7 @@ class AuthController extends Controller
         $request->validated();
         $admin = $this->handler->registerAdmin($request);
         $resource = new AdminResource($admin);
-        return ResponseHelpers::success($resource,'Akmessage: un Berhasil Dibuat');
+        return ResponseHelpers::success($resource,'Akun Berhasil Dibuat');
         } catch(\Throwable $e){
             return ResponseHelpers::error(null, 'Gagal Melakukan Register');
         }
