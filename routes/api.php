@@ -36,5 +36,6 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::put('/menus/{id}', [MenuController::class, 'update']);
     Route::delete('/menus/{id}', [MenuController::class, 'destroy']);  
     
+    
 });
 //code

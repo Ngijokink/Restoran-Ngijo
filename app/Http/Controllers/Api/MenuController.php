@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Interfaces\MenusInterface;
 use App\Http\Controllers\Controller;
+use App\Helpers\UploadHelper;
 
 
     class MenuController extends Controller
@@ -25,8 +26,13 @@ use App\Http\Controllers\Controller;
 
     public function store(Request $request)
     {
+         $imagePath = UploadHelper::uploadImage($request->file('image'));
+
         $data = $request->all();
+        $data['image'] = $imagePath;
         return response()->json($this->repository->createMenu($data));
+        
+
     }
 
     public function update(Request $request, $id)

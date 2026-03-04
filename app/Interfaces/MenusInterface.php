@@ -8,4 +8,5 @@ interface MenusInterface
     public function createMenu(array $data);
     public function updateMenu($id, array $data);
     public function deleteMenu($id);
+    public function uploadImage($file);
 }
