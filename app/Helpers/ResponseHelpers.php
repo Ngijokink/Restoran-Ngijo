@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseHelpers{
@@ -9,6 +10,8 @@ class ResponseHelpers{
             'status' => 'success',
             'message' => $message,
             'data' => $data
+            
+
         ], $code);
     }
 
@@ -18,5 +21,7 @@ class ResponseHelpers{
             'message' => $message,
             'data' => $data
         ], $code);
+
     }
+    
 }

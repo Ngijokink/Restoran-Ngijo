@@ -3,6 +3,7 @@ namespace App\Repositories;
 use App\Models\Menu;
 use App\Interfaces\MenusInterface;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\UploadHelper;
 
 class MenuRepo implements MenusInterface
 {
@@ -45,5 +46,9 @@ class MenuRepo implements MenusInterface
             return $record->delete();
         }
         return false;
+    }
+    public function UploadImage($file)
+    {
+        return UploadHelper::uploadImage($file, 'menus');
     }
 }
