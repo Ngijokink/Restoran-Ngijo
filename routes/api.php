@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\MenuController;
 // Authentication Routes
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/register',[AuthController::class,'register']);
-Route::post('/register/v1/feril/josh/rizky/adjkbasdaksldbnaslkdaskjdbajbkiuwuy]8n\by7q4wz5ex6crtv8b8nimonk86tdrszt',[AuthController::class,'registerAdmin']);
+Route::post('/register/asjdkbaskjdnaskdjbasdkasndaskjdbansdaskdjbasndmad/admin',[AuthController::class,'registerAdmin']);
 Route::middleware(['auth:sanctum'])->group(function (){
     // Routes for Categories
     Route::get('/categories', [CatController::class, 'index']);

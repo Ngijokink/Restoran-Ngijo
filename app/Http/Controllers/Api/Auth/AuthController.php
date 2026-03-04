@@ -7,6 +7,8 @@ use App\Helpers\ResponseHelpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisRequest;
+use App\Http\Resources\Auth\AdminResource;
+use App\Http\Resources\Auth\AuthResource;
 use App\Interfaces\AuthInterface;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,7 +26,8 @@ class AuthController extends Controller
         try{
         $request->validated();
         $user = $this->handler->register($request);
-        return ResponseHelpers::success($user,'Akun Berhasil Dibuat');
+        $resource = new AuthResource($user);
+        return ResponseHelpers::success($resource,'Akun Berhasil Dibuat');
         } catch(\Throwable $e){
             return ResponseHelpers::error(null, 'Gagal Melakukan Register');
         }
@@ -33,8 +36,9 @@ class AuthController extends Controller
       
         try{
         $request->validated();
-        $user = $this->handler->registerAdmin($request);
-        return ResponseHelpers::success($user,'Akun Berhasil Dibuat');
+        $admin = $this->handler->registerAdmin($request);
+        $resource = new AdminResource($admin);
+        return ResponseHelpers::success($resource,'Akmessage: un Berhasil Dibuat');
         } catch(\Throwable $e){
             return ResponseHelpers::error(null, 'Gagal Melakukan Register');
         }
