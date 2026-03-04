@@ -1,9 +1,10 @@
 <?php
 namespace App\Http\Controllers\Api;
+use App\Helpers\ResponseHelpers;
+use App\Http\Resources\CategoryResource;
 use App\Interfaces\CatInterface;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Requests\CatRequest;
+use App\Http\Requests\CatRequest;
 
 
 class CatController extends Controller
@@ -17,7 +18,8 @@ class CatController extends Controller
 
     public function index()
     {
-        return response()->json($this->repository->allCategory());
+        $repo = $this->repository->allCategory();
+        return ResponseHelpers::success($repo,'Data Category');
     }
 
     public function show($id)
@@ -28,7 +30,9 @@ class CatController extends Controller
     public function store(CatRequest $request)
     {
         $data = $request->all();
-        return response()->json($this->repository->createCategory($data));
+        $repo = $this->repository->createCategory($data);
+        $resource = new CategoryResource($repo);
+        return ResponseHelpers::success($resource,'Berhasil Membuat Category');
     }
 
     public function update(CatRequest $request, $id)

@@ -1,6 +1,6 @@
 <?php
 namespace App\Repositories;
-use App\Models\User;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use App\Interfaces\CatInterface;
 
@@ -8,7 +8,7 @@ class CatRepo implements CatInterface
 {
     protected $model;
 
-    public function __construct(User $model)
+    public function __construct(Category $model)
     {
         $this->model = $model;
     }

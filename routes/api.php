@@ -20,21 +20,28 @@ use App\Http\Controllers\Api\MenuController;
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/register/asjdkbaskjdnaskdjbasdkasndaskjdbansdaskdjbasndmad/admin',[AuthController::class,'registerAdmin']);
-Route::middleware(['auth:sanctum'])->group(function (){
-    // Routes for Categories
-    Route::get('/categories', [CatController::class, 'index']);
-    Route::get('/categories/{id}', [CatController::class, 'show']);
-    Route::post('/categories', [CatController::class, 'store']);
-    Route::put('/categories/{id}', [CatController::class, 'update']);
-    Route::delete('/categories/{id}', [CatController::class, 'destroy']);
-    Route::post('/logout',[AuthController::class,'logout']);
+// Route::middleware(['auth:sanctum','role:admin'])->group(function (){
+//     // Routes for Categories
+//     Route::get('/categories', [CatController::class, 'index']);
+//     Route::get('/categories/{id}', [CatController::class, 'show']);
+//     Route::post('/categories', [CatController::class, 'store']);
+//     Route::put('/categories/{id}', [CatController::class, 'update']);
+//     Route::delete('/categories/{id}', [CatController::class, 'destroy']);
+//     Route::post('/logout',[AuthController::class,'logout']);
     
-    // Routes for Menus
-    Route::get('/menus', [MenuController::class, 'index']);
-    Route::get('/menus/{id}', [MenuController::class, 'show']);
-    Route::post('/menus', [MenuController::class, 'store']);
-    Route::put('/menus/{id}', [MenuController::class, 'update']);
-    Route::delete('/menus/{id}', [MenuController::class, 'destroy']);  
+//     // Routes for Menus
+//     Route::get('/menus', [MenuController::class, 'index']);
+//     Route::get('/menus/{id}', [MenuController::class, 'show']);
+//     Route::post('/menus', [MenuController::class, 'store']);
+//     Route::put('/menus/{id}', [MenuController::class, 'update']);
+//     Route::delete('/menus/{id}', [MenuController::class, 'destroy']);  
+    
+    
+// });
+Route::middleware(['auth:sanctum','role:admin'])->group(function (){
+    // Routes for Categories
+    Route::resource('/categories',CatController::class);
+    Route::resource('/menus',MenuController::class);
     
     
 });
