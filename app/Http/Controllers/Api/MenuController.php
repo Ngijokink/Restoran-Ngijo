@@ -39,4 +39,13 @@ use App\Http\Controllers\Controller;
     {
         return response()->json($this->repository->deleteMenu($id));
     }
+    public function uploadImage(Request $request)
+    {
+        $file = $request->file('image');
+        if ($file) {
+            $path = $this->repository->UploadImage($file);
+            return response()->json(['path' => $path]);
+        }
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
 }

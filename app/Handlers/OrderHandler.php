@@ -2,14 +2,14 @@
 
 namespace App\Handlers;
 
-use App\Repositories\CrudOrderRepo;
+use App\Repositories\OrderRepo;
 use Illuminate\Http\Request;
 
 class OrderHandler
 {
     protected $orderRepo;
 
-    public function __construct(CrudOrderRepo $orderRepo)
+    public function __construct(OrderRepo $orderRepo)
     {
         $this->orderRepo = $orderRepo;
     }
