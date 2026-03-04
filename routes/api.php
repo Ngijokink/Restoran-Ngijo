@@ -20,11 +20,13 @@ use App\Http\Controllers\Api\MenuController;
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/register/asjdkbaskjdnaskdjbasdkasndaskjdbansdaskdjbasndmad/admin',[AuthController::class,'registerAdmin']);
+Route::resource('/categories',CatController::class);
 
 Route::middleware(['auth:sanctum','role:admin'])->group(function (){
     // Routes for Categories
-    Route::resource('/categories',CatController::class);
     Route::resource('/menus',MenuController::class);
-    
+    Route::put('/users/{id}/role', [AuthController::class, 'updateRole']);
+    Route::get('/users', [AuthController::class, 'user']);
+    Route::post('/logout',[AuthController::class,'logout']);
     
 });
