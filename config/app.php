@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -70,8 +71,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
-
+    'timezone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
