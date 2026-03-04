@@ -1,14 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from "react-router-dom"
+import Login from "./Pages/Login";
+import Dashbord from "./Pages/Dashboard";
+import ProtectedRoute from "./ProtectedRoute/Protected.Route";
+import axios from "./Service/Axois"
 
-function App() {
-  const [count, setCount] = useState(0)
+  function App() {
 
   return (
-      <div>
-      <h2 className='text-center'>Joshua ganteng BANGETTTTTTTT!!!!!!!!!!!!!!!</h2>      </div>
+      <Routes>
+     <Route path="/" element={<Login />} />
+      <Route
+      path="/Dashboard"
+      element={
+        <ProtectedRoute>
+          <Dashbord />
+        </ProtectedRoute>
+      }
+      />
+          </Routes>
   )
 }
 
