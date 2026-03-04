@@ -3,9 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Order;
-use App\Interfaces\CrudOrderInterface;
+use App\Interfaces\OrderInterface;
 use Illuminate\Database\Eloquent\Model;
-class CrudOrderRepo implements CrudOrderInterface
+class OrderRepo implements OrderInterface
 {
     protected $model;
 

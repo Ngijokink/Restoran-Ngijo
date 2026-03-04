@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface CrudOrderInterface
+interface OrderInterface
 {
     public function allOrder();
     public function findOrder($id);

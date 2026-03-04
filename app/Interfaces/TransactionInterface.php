@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface CrudTransactionInterface
+interface TransactionInterface
 {
     public function allTransaction();
     public function findTransaction($id);

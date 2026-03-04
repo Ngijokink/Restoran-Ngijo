@@ -4,7 +4,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Validator;
-class CrudCatRequest extends FormRequest
+class CatRequest extends FormRequest
 {    public function authorize()
     {
         return true;

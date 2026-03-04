@@ -1,34 +1,35 @@
 <?php
-namespace App\Repositories;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use App\Interfaces\CrudCatInterface;
 
-class CrudCatRepo implements CrudCatInterface
+namespace App\Repositories;
+use App\Models\Transaction;
+use App\Interfaces\TransactionInterface;
+use Illuminate\Database\Eloquent\Model;
+
+class TransactionRepo implements TransactionInterface
 {
     protected $model;
 
-    public function __construct(User $model)
+    public function __construct(Transaction $model)
     {
         $this->model = $model;
     }
 
-    public function allCategory()
+    public function allTransaction()
     {
         return $this->model->all();
     }
 
-    public function findCategory($id)
+    public function findTransaction($id)
     {
         return $this->model->find($id);
     }
 
-    public function createCategory(array $data)
+    public function createTransaction(array $data)
     {
         return $this->model->create($data);
     }
 
-    public function updateCategory($id, array $data)
+    public function updateTransaction($id, array $data)
     {
         $record = $this->model->find($id);
         if ($record) {
@@ -38,7 +39,7 @@ class CrudCatRepo implements CrudCatInterface
         return null;
     }
 
-    public function deleteCategory($id)
+    public function deleteTransaction($id)
     {
         $record = $this->model->find($id);
         if ($record) {

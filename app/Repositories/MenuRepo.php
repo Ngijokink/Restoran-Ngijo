@@ -1,35 +1,34 @@
 <?php
-
 namespace App\Repositories;
-use App\Models\Transaction;
-use App\Interfaces\CrudTransactionInterface;
+use App\Models\Menu;
+use App\Interfaces\MenusInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class CrudTransactionRepo implements CrudTransactionInterface
+class MenuRepo implements MenusInterface
 {
     protected $model;
 
-    public function __construct(Transaction $model)
+    public function __construct(Menu $model)
     {
         $this->model = $model;
     }
 
-    public function allTransaction()
+    public function allMenu()
     {
         return $this->model->all();
     }
 
-    public function findTransaction($id)
+    public function findMenu($id)
     {
         return $this->model->find($id);
     }
 
-    public function createTransaction(array $data)
+    public function createMenu(array $data)
     {
         return $this->model->create($data);
     }
 
-    public function updateTransaction($id, array $data)
+    public function updateMenu($id, array $data)
     {
         $record = $this->model->find($id);
         if ($record) {
@@ -39,7 +38,7 @@ class CrudTransactionRepo implements CrudTransactionInterface
         return null;
     }
 
-    public function deleteTransaction($id)
+    public function deleteMenu($id)
     {
         $record = $this->model->find($id);
         if ($record) {

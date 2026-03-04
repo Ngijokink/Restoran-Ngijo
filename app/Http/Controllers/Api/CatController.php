@@ -1,16 +1,16 @@
 <?php
 namespace App\Http\Controllers\Api;
-use App\Interfaces\CrudCatInterface;
+use App\Interfaces\CatInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Requests\CrudCatRequest;
+use App\Requests\CatRequest;
 
 
-class CrudCatController extends Controller
+class CatController extends Controller
 {
     protected $repository;
 
-    public function __construct(CrudCatInterface $repository)
+    public function __construct(CatInterface $repository)
     {
         $this->repository = $repository;
     }
@@ -25,13 +25,13 @@ class CrudCatController extends Controller
         return response()->json($this->repository->findCategory($id));
     }
 
-    public function store(CrudCatRequest $request)
+    public function store(CatRequest $request)
     {
         $data = $request->all();
         return response()->json($this->repository->createCategory($data));
     }
 
-    public function update(CrudCatRequest $request, $id)
+    public function update(CatRequest $request, $id)
     {
         $data = $request->all();
         return response()->json($this->repository->updateCategory($id, $data));

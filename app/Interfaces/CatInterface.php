@@ -1,7 +1,7 @@
 <?php
 namespace App\Interfaces;
 
-interface CrudCatInterface
+interface CatInterface
 {
     public function allCategory();
     public function findCategory($id);

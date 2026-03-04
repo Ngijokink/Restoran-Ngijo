@@ -1,14 +1,14 @@
 <?php
 namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
-use App\Interfaces\CrudMenusInterface;
+use App\Interfaces\MenusInterface;
 use App\Http\Controllers\Controller;
 
 
-    class CrudMenusController extends Controller
+    class MenuController extends Controller
     {
         protected $repository;
-    public function __construct(CrudMenusInterface $repository)
+    public function __construct(MenusInterface $repository)
     {
         $this->repository = $repository;
     }

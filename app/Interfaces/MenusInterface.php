@@ -1,7 +1,7 @@
 <?php
 namespace App\Interfaces;
 
-interface CrudMenusInterface
+interface MenusInterface
 {
     public function allMenu();
     public function findMenu($id);
