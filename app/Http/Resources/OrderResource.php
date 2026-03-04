@@ -4,11 +4,12 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Carbon\Carbon;
 class OrderResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        Carbon::setLocale('id'); // Set locale ke Indonesia untuk format tanggal
         return [
             // id_order adalah Primary Key di migration kamu
             'id' => $this->id_order, 
@@ -29,7 +30,11 @@ class OrderResource extends JsonResource
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
             'transaction' => new TransactionResource($this->whenLoaded('transaksi')),
             
-            'dibuat_pada' => $this->created_at->format('Y-m-d H:i:s'),
+            'dibuat_pada' => $this->created_at 
+    ? Carbon::parse($this->created_at)
+        ->timezone('Asia/Jakarta') // Menambah 7 jam secara otomatis ke WIB
+        ->format('d-m-Y H:i:s') . ' WIB' 
+    : '-',
         ];
     }
 }
