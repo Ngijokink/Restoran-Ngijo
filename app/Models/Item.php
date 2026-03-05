@@ -29,4 +29,5 @@ class Item extends Model
     {
         return $this->belongsTo(Menu::class, 'menu_id', 'id_menu');
     }
+    public $timestamps = true;
 }

@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use Carbon\Traits\Timestamp;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -15,4 +16,5 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public $timestamps = true;
 }

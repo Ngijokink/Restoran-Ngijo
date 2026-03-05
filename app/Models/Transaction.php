@@ -18,4 +18,5 @@ class Transaction extends Model
     {
         return $this->hasOne(Order::class, 'transaction_id', 'id');
     }
+    public $timestamps = true;
 }

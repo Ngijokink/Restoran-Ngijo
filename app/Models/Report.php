@@ -21,5 +21,6 @@ class Report extends Model
         'total_success_amount',
         'total_per_method',
     ];
+    public $timestamps = true;
     
 }
