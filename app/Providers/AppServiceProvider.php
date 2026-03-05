@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
          \App\Repositories\TransactionRepo::class); 
          $this->app->bind(\App\Interfaces\ReportInterface::class,
          \App\Repositories\ReportRepo::class);
+            $this->app->bind(\App\Interfaces\PaymentInterface::class,   
+            \App\Repositories\PaymentRepo::class);
     }
 
     /**

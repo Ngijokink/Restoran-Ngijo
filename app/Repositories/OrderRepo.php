@@ -2,14 +2,14 @@
 
 namespace App\Repositories;
 
-use App\Models\Order;
+use App\Models\Orders;  
 use App\Interfaces\OrderInterface;
 use Illuminate\Database\Eloquent\Model;
 class OrderRepo implements OrderInterface
 {
     protected $model;
 
-    public function __construct(Order $model)
+    public function __construct(Orders $model)
     {
         $this->model = $model;
     }

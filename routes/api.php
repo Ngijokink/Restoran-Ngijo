@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CatController;
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +38,6 @@ Route::middleware(['auth:sanctum','role:admin'])->group(function (){
     Route::put('/users/{id}/role', [AuthController::class, 'updateRole']);
     Route::get('/users', [AuthController::class, 'user']);
     Route::post('/logout',[AuthController::class,'logout']);
+    Route::post('/payments', [PaymentController::class, 'store']);
     
 });

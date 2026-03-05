@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Payment extends Model
+{
+    protected $table = 'payments';
+    public $timestamps = true;
+
+    protected $fillable = [
+        'order_id',
+        'amount',
+        'method',
+        'status',
+        'proof',
+        'paid_at',
+    ];
+
+    public function order()
+    {
+         return $this->belongsTo(Orders::class, 'order_id', 'id_order');
+    }
+}
