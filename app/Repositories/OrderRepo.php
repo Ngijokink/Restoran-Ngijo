@@ -47,4 +47,8 @@ class OrderRepo implements OrderInterface
         }
         return false;
     }
+    public function whereOrder($field, $value)
+    {
+        return $this->model->where($field, $value)->get();
+    }
 }

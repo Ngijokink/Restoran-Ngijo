@@ -9,4 +9,5 @@ interface OrderInterface
     public function createOrder(array $data);
     public function updateOrder($id, array $data);
     public function deleteOrder($id);
+    public function whereOrder($field, $value);
 }
