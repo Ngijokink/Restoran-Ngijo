@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom"
 import Login from "./Pages/Login";
 import Dashbord from "./Pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute/Protected.Route";
-import axios from "./Service/Axois"
+import axios from "./Service/Axios"
 
   function App() {
 
