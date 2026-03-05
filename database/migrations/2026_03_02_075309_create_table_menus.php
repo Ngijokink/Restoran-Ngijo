@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('price');
             $table->integer('stock');
             $table->enum('is_available',['ada','kosong']);
+            $table->string('image')->nullable();
             $table->timestamps();
             
 
