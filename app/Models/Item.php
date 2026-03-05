@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+// use App\Models\Orders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Item extends Model
@@ -45,7 +46,7 @@ class Item extends Model
 
     public function order()
     {
-        return $this->belongsTo(Order::class, 'order_id', 'id_order');
+        return $this->belongsTo(Orders::class, 'order_id', 'id_order');
     }
 
     public function menu()

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CatController;
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\PaymentController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
