@@ -22,5 +22,12 @@ class Report extends Model
         'total_per_method',
     ];
     public $timestamps = true;
+    protected $casts = [
+        'order_status_breakdown' => 'array',
+        'total_per_method'       => 'array',
+        'report_date'            => 'date',
+        'created_at'             => 'datetime',
+        'updated_at'             => 'datetime',
+    ];
     
 }

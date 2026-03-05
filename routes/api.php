@@ -30,9 +30,9 @@ Route::middleware(['auth:sanctum','role:admin'])->group(function (){
     Route::resource('/categories',CatController::class);
     Route::resource('/menus',MenuController::class);
     Route::resource('/orders',OrderController::class);
-    // Route::resource('/export/pdf',ReportController::class);
+    // Report routes - custom route harus sebelum resource
+    Route::get('/report/export-pdf',[ReportController::class, 'exportPdf']);
     Route::resource('/report',ReportController::class);
-    Route::get('/report/export-pdf',[ReportController::class, 'pdf']);
     Route::resource('/transaction',TransactionController::class);
     Route::put('/users/{id}/role', [AuthController::class, 'updateRole']);
     Route::get('/users', [AuthController::class, 'user']);
