@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reports', function (Blueprint $table) {
-            $table->id();
-             $table->date('report_date'); 
+            $table->uuid();
+            $table->date('report_date'); 
             $table->integer('total_orders')->default(0);
             $table->decimal('total_order_revenue', 12, 2)->default(0);
             $table->json('order_status_breakdown')->nullable(); 
