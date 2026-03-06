@@ -80,13 +80,25 @@ public function logout(Request $request)
 
 public function UpdateRole(AdminRequest $request, $id)
 {
-    $data = $request->validated();
-    $user = $this->model->findOrFail($id);
-    $user->role = $data['role'];
-    $user->save();
+    try {
 
-    return ResponseHelpers::success($user,'Role User Berhasil Di Ubah');
+        $data = $request->validated();
+        $user = $this->model->findOrFail($id);
+
+        $this->handler->updateRole($user);
+
+        $user->role = $data['role'];
+        $user->save();
+
+        return ResponseHelpers::success($user,'Role User Berhasil Di Ubah');
+
+    } catch(\Exception $e){
+
+        return ResponseHelpers::error(null,$e->getMessage());
+
+    }
 }
+
 public function User(){
     $user = $this->model->all();
     return ResponseHelpers::success($user,'Role User Berhasil Di Ubah');

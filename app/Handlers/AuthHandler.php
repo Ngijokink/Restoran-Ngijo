@@ -1,13 +1,17 @@
 <?php
 namespace App\Handlers;
 
+use App\Http\Requests\Auth\AdminRequest;
 use App\Interfaces\AuthInterface;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthHandler{
     protected $repo;
-    public function __construct(AuthInterface $repo){
+    protected $model;
+    public function __construct(AuthInterface $repo, User $model){
         $this->repo = $repo;
+        $this->model = $model;
     }
     public function register($request){
         $create = $this->repo->create([
@@ -39,5 +43,13 @@ class AuthHandler{
     return [
         'token' => $token
     ];
+}
+public function updateRole($user)
+{
+    $authUser = auth()->user();
+
+    if($authUser->role == 'admin' && $user->role == 'admin'){
+        throw new \Exception('Tidak bisa mengubah role dengan level yang sama');
+    }
 }
 }
