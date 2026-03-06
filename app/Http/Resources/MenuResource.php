@@ -17,6 +17,9 @@ class MenuResource extends JsonResource
             'tersedia'     => (bool) $this->is_available,
             // Menampilkan kategori jika di-load
             'kategori'     => new CategoryResource($this->whenLoaded('category')),
+               'image_url' => $this->image
+            ? asset('storage/' . $this->image)
+            : null,
         ];
     }
 }

@@ -25,16 +25,20 @@ use App\Helpers\UploadHelper;
         return ResponseHelpers::success($this->repository->findMenu($id),'Data Menu');
     }
 
-    public function store(Request $request)
-    {
-         $imagePath = UploadHelper::uploadImage($request->file('image'));
+   public function store(Request $request)
+{
+    $imagePath = UploadHelper::uploadImage($request->file('image'));
 
-        $data = $request->all();
-        $data['image'] = $imagePath;
-        return ResponseHelpers::success($this->repository->createMenu($data),'Berhasil Membuat Menu');
+    $data = $request->all();
+    $data['image'] = $imagePath;
 
+    $menu = $this->repository->createMenu($data);
+    $menu->image_url = $menu->image
+        ? asset('storage/'.$menu->image)
+        : null;
 
-    }
+    return ResponseHelpers::success($menu, 'Berhasil Membuat Menu');
+}
 
     public function update(Request $request, $id)
     {
