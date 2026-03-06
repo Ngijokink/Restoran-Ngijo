@@ -1,24 +1,14 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
-import Dashbord from "./Pages/Dashboard";
-import ProtectedRoute from "./ProtectedRoute/Protected.Route";
-import axios from "./Service/Axios"
-
-  function App() {
-
+import Dashboard from "./Pages/Dashboard"; 
+import axios from "./Service/Axios";
+function App() {
   return (
-      <Routes>
-     <Route path="/" element={<Login />} />
-      <Route
-      path="/Dashboard"
-      element={
-        <ProtectedRoute>
-          <Dashbord />
-        </ProtectedRoute>
-      }
-      />
-          </Routes>
-  )
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/Dashboard" element={<Dashboard />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
