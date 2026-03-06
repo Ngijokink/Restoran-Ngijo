@@ -2,23 +2,47 @@
 
 namespace App\Http\Middleware;
 
-use App\Helpers\ResponseHelpers;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class CheckRoleMiddleware
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Hierarki role — semakin tinggi angka, semakin tinggi akses.
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    private array $roleLevel = [
+        'superadmin' => 4,
+        'admin'      => 3,
+        'manager'    => 2,
+        'staff'      => 1,
+        'pelanggan'  => 0,
+    ];
+
+    public function handle(Request $request, Closure $next, string $requiredRole): mixed
     {
-        if(auth()->user()->role !==$role){
-            return ResponseHelpers::error(null,'Role Tidak Cocok');
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Unauthenticated.',
+                'data'    => null,
+            ], 401);
         }
+
+        $userLevel     = $this->roleLevel[$user->role]     ?? -1;
+        $requiredLevel = $this->roleLevel[$requiredRole]   ?? 999;
+
+        // User bisa akses kalau levelnya >= level yang dibutuhkan
+        // Contoh: superadmin (4) bisa akses route yang butuh role:admin (3)
+        if ($userLevel < $requiredLevel) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Kamu tidak punya akses ke halaman ini.',
+                'data'    => null,
+            ], 403);
+        }
+
         return $next($request);
     }
 }
