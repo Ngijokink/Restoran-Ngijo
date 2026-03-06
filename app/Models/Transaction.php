@@ -9,14 +9,36 @@ class Transaction extends Model
     use HasFactory;
 
     protected $table = 'transaksi';
-    protected $primaryKey = 'id';
-    
+    protected $primaryKey = 'uuid';
+    public $incrementing = false;       
+    protected $keyType = 'string';
+
     protected $fillable = [
+        'uuid',
+        'order_id',     
+        'total',
+        'method',       
+        'status',
+        'paid_at',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
 
     public function order()
     {
-        return $this->hasOne(Order::class, 'transaction_id', 'id');
+        // note: orders table currently doesn't define transaction_id; if you
+        // add the column later, make sure it stores a uuid and use this key
+        return $this->hasOne(Orders::class, 'transaction_id', 'uuid');
     }
+    
     public $timestamps = true;
 }

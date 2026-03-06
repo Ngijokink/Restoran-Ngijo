@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\TransactionRequest;
 use Illuminate\Http\Request;
 use App\Interfaces\TransactionInterface;
 use App\Http\Controllers\Controller;
@@ -25,15 +26,15 @@ class TransactionController extends Controller
         return response()->json($this->repository->findTransaction($id));
     }
 
-    public function store(Request $request)
+    public function store(TransactionRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
         return response()->json($this->repository->createTransaction($data));
     }
 
-    public function update(Request $request, $id)
+    public function update(TransactionRequest $request, $id)
     {
-        $data = $request->all();
+        $data = $request->validated();
         return response()->json($this->repository->updateTransaction($id, $data));
     }
 
