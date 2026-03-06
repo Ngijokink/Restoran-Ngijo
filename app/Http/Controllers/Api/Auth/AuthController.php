@@ -24,13 +24,6 @@ class AuthController extends Controller
         $this->model   = $model;
     }
 
-    // -------------------------------------------------------------------------
-    // REGISTER
-    // -------------------------------------------------------------------------
-
-    /**
-     * Register user biasa — public.
-     */
     public function register(RegisRequest $request)
     {
         try {
@@ -44,10 +37,6 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Register admin baru — hanya superadmin.
-     * Middleware: auth:sanctum + role:superadmin
-     */
     public function registerAdmin(RegisRequest $request)
     {
         try {
@@ -61,11 +50,6 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Register superadmin — hanya bisa 1 kali (superadmin belum ada).
-     * Sebaiknya endpoint ini dihapus atau dilindungi setelah setup awal.
-     * Untuk keamanan, route ini bisa dihapus setelah superadmin pertama dibuat.
-     */
     public function registerSuperAdmin(RegisRequest $request)
     {
         try {
@@ -78,10 +62,6 @@ class AuthController extends Controller
             return ResponseHelpers::error(null, $e->getMessage(), 422);
         }
     }
-
-    // -------------------------------------------------------------------------
-    // LOGIN / LOGOUT
-    // -------------------------------------------------------------------------
 
     public function login(LoginRequest $request)
     {
@@ -110,15 +90,6 @@ class AuthController extends Controller
         }
     }
 
-    // -------------------------------------------------------------------------
-    // ROLE MANAGEMENT
-    // -------------------------------------------------------------------------
-
-    /**
-     * Update role user tertentu.
-     * - Superadmin: bisa ubah semua role di bawahnya (admin, manager, staff, user).
-     * - Admin     : bisa ubah manager, staff, user — TIDAK bisa ubah admin/superadmin.
-     */
     public function updateRole(AdminRequest $request, $id)
 {
     try {
@@ -133,15 +104,7 @@ class AuthController extends Controller
     }
 }
 
-    // -------------------------------------------------------------------------
-    // USER LIST
-    // -------------------------------------------------------------------------
 
-    /**
-     * Ambil semua user.
-     * - Superadmin: lihat semua user.
-     * - Admin     : lihat semua user kecuali superadmin.
-     */
     public function users()
     {
         try {

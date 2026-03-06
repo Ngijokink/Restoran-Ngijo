@@ -138,10 +138,7 @@ class AuthHandler
         $newLevel    = $roles[$newRole];
 
         // 1. Tidak boleh ubah role sendiri
-        if ($authUser->id == $targetUser->id) {
-            throw new \Exception('Tidak bisa mengubah role diri sendiri.');
-        }
-
+        
         // 2. Tidak bisa sentuh superadmin (kecuali sesama superadmin — mustahil karena hanya 1)
         if ($targetLevel >= $authLevel) {
             throw new \Exception('Tidak bisa mengubah role user dengan level yang sama atau lebih tinggi dari kamu.');

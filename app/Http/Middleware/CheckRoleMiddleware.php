@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 
 class CheckRoleMiddleware
 {
-    /**
-     * Hierarki role — semakin tinggi angka, semakin tinggi akses.
-     */
+
     private array $roleLevel = [
         'superadmin' => 4,
         'admin'      => 3,
@@ -33,8 +31,6 @@ class CheckRoleMiddleware
         $userLevel     = $this->roleLevel[$user->role]     ?? -1;
         $requiredLevel = $this->roleLevel[$requiredRole]   ?? 999;
 
-        // User bisa akses kalau levelnya >= level yang dibutuhkan
-        // Contoh: superadmin (4) bisa akses route yang butuh role:admin (3)
         if ($userLevel < $requiredLevel) {
             return response()->json([
                 'status'  => 'error',
