@@ -10,16 +10,17 @@ class Payment extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'id_cart',
+        'order_id',
         'amount',
         'method',
         'status',
         'proof',
         'paid_at',
+        'image',
     ];
 
-    public function cart()
+    public function order()
     {
-         return $this->belongsTo(Cart::class, 'id_cart', 'id_cart');
+         return $this->belongsTo(Orders::class, 'order_id', 'id_order');
     }
 }

@@ -26,7 +26,7 @@ class PaymentController extends Controller
 }
 
     $data = $request->all();
-    $data['image'] = $image;
+    $data['proof'] = $image;
 
     $payment = $this->repository->create($data);
     $payment->image_url = $payment  ->image
