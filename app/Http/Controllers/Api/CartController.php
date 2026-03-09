@@ -40,6 +40,6 @@ class CartController extends Controller
     public function checkout(CartRequest $request, $userId)
     {
         $data = $request->validated();
-        return response()->json($this->repository->checkout($userId, $data));
+        return response()->json($this->repository->checkout($userId));
     }
 }
