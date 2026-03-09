@@ -55,15 +55,8 @@ class ReportController extends Controller
 
    public function exportPdf($date)
 {
-    $orderStats = $this->repository->getDailyOrderStats($date);
-    $transactionStats = $this->repository->getDailyTransactionStats($date);
-
-    $pdf = Pdf::loadView('reports.combined-stats-pdf', [
-        'orderStats' => $orderStats,
-        'transactionStats' => $transactionStats,
-        'date' => $date
-    ]);
-
-    return $pdf->download('daily-stats-'.$date.'.pdf');
+    $report = $this->repository->createReport(['report_date' => $date]);
+    $pdf = Pdf::loadView('reports.combined-stats-pdf', ['report' => $report]);
+    return $pdf->download('report-'.$date.'.pdf');
 }
 }

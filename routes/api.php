@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::resource('/categories', CatController::class);
     Route::resource('/orders', OrderController::class);
 
-    Route::get('/report/export-pdf', [ReportController::class, 'exportPdf']); // harus sebelum resource
+    Route::get('/report/export-pdf/{date}', [ReportController::class, 'exportPdf']); // harus sebelum resource
     Route::resource('/report', ReportController::class);
     Route::resource('/transaction', TransactionController::class);
     // Route::post('/payments', [PaymentController::class, 'store']);
