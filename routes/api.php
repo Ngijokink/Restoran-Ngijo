@@ -21,6 +21,8 @@ Route::middleware(['auth:sanctum', 'role:superadmin'])->group(function () {
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
+    Route::resource('/items', OrderItemController::class);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/users',              [AuthController::class, 'users']);

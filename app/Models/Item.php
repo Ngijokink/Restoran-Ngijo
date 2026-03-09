@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-// use App\Models\Orders;
+use App\Models\Orders;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Item extends Model
@@ -17,6 +17,7 @@ class Item extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
+        'id_order_item',
         'order_id',
         'menu_id',
         'quantity',

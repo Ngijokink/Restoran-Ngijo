@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Resources;
+namespace App\Repositories;
+
 use App\Interfaces\OrderItemInterface;
 use App\Models\Item;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrderItemRepo extends JsonResource implements OrderItemInterface
+class OrderItemRepo implements OrderItemInterface
 {
     public function allOrderItem()
     {
