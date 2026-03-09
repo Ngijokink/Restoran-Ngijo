@@ -45,7 +45,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/categories', [CatController::class, 'index']);
     Route::get('/menus', [MenuController::class, 'index']);
-     Route::get('/cart/{userId}', [CartController::class, 'viewCart']);
+    Route::get('/cart/{userId}', [CartController::class, 'viewCart']);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::put('/cart/update/{itemId}', [CartController::class, 'updateCartItem']);
     Route::delete('/cart/remove/{itemId}', [CartController::class, 'removeCartItem']);

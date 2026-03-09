@@ -10,7 +10,7 @@ class Payment extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'order_id',
+        'id_cart',
         'amount',
         'method',
         'status',
@@ -18,8 +18,8 @@ class Payment extends Model
         'paid_at',
     ];
 
-    public function order()
+    public function cart()
     {
-         return $this->belongsTo(Orders::class, 'order_id', 'id_order');
+         return $this->belongsTo(Cart::class, 'id_cart', 'id_cart');
     }
 }

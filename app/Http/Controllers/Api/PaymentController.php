@@ -3,6 +3,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Interfaces\PaymentInterface;
 use App\Http\Requests\PaymentRequest;
+use App\Helpers\UploadHelper;
+use App\Helpers\ResponseHelpers;
+
 
 
 class PaymentController extends Controller
@@ -16,8 +19,21 @@ class PaymentController extends Controller
 
     public function store(PaymentRequest $request)
     {
-        $data = $request->validated();
-        return response()->json($this->repository->create($data));
+    if ($request->hasFile('image')) {
+    $image = UploadHelper::UploadImage($request->file('image'));
+} else {
+    $image = null;
+}
+
+    $data = $request->all();
+    $data['image'] = $image;
+
+    $payment = $this->repository->create($data);
+    $payment->image_url = $payment  ->image
+        ? asset('storage/'.$payment->image)
+        : null;
+
+    return ResponseHelpers::success($payment, 'Terimakasih');
     }
 
     public function showByOrderId($id)
