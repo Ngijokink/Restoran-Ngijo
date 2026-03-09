@@ -1,12 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
 use App\Interfaces\PaymentInterface;
 use App\Http\Requests\PaymentRequest;
 use App\Helpers\UploadHelper;
 use App\Helpers\ResponseHelpers;
-
-
 
 class PaymentController extends Controller
 {
@@ -19,30 +19,58 @@ class PaymentController extends Controller
 
     public function store(PaymentRequest $request)
     {
-    if ($request->hasFile('image')) {
-    $image = UploadHelper::UploadImage($request->file('image'));
-} else {
-    $image = null;
-}
+        try {
 
-    $data = $request->all();
-    $data['proof'] = $image;
+            $data = $request->validated();
 
-    $payment = $this->repository->create($data);
-    $payment->image_url = $payment  ->image
-        ? asset('storage/'.$payment->image)
-        : null;
+            if ($request->hasFile('image')) {
+                $data['proof'] = UploadHelper::UploadImage($request->file('image'));
+            } else {
+                $data['proof'] = null;
+            }
 
-    return ResponseHelpers::success($payment, 'Terimakasih');
+            $payment = $this->repository->create($data);
+
+            $payment->image_url = $payment->proof
+                ? asset('storage/' . $payment->proof)
+                : null;
+
+            return ResponseHelpers::success($payment, 'Terimakasih, pembayaran berhasil dikirim');
+
+        } catch (\Exception $e) {
+
+            return ResponseHelpers::error(null, 'Gagal melakukan pembayaran : ' . $e->getMessage());
+
+        }
     }
 
     public function showByOrderId($id)
     {
-        return response()->json($this->repository->findByOrderId($id));
+        try {
+
+            $payment = $this->repository->findByOrderId($id);
+
+            return ResponseHelpers::success($payment, 'Data pembayaran');
+
+        } catch (\Exception $e) {
+
+            return ResponseHelpers::error(null, 'Gagal mengambil data pembayaran : ' . $e->getMessage());
+
+        }
     }
 
     public function updateStatus($paymentId, $status)
     {
-        return response()->json($this->repository->updateStatus($paymentId, $status));
+        try {
+
+            $payment = $this->repository->updateStatus($paymentId, $status);
+
+            return ResponseHelpers::success($payment, 'Status pembayaran berhasil diupdate');
+
+        } catch (\Exception $e) {
+
+            return ResponseHelpers::error(null, 'Gagal update status pembayaran : ' . $e->getMessage());
+
+        }
     }
 }

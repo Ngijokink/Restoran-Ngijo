@@ -1,13 +1,15 @@
 <?php
+
 namespace App\Http\Controllers\Api;
+
+use App\Helpers\ResponseHelpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Interfaces\CartInterface;
 use App\Http\Requests\CartRequest;
 
-
 class CartController extends Controller
-{   
+{
     protected $repository;
 
     public function __construct(CartInterface $repository)
@@ -17,29 +19,78 @@ class CartController extends Controller
 
     public function addToCart(CartRequest $request)
     {
-        $data = $request->validated();
-        return response()->json($this->repository->addToCart($data));
+        try {
+
+            $data = $request->validated();
+            $result = $this->repository->addToCart($data);
+
+            return ResponseHelpers::success($result, 'Data cart berhasil ditambahkan');
+
+        } catch (\Exception $e) {
+
+            return ResponseHelpers::error(null, 'Gagal Add To Cart : ' . $e->getMessage());
+
+        }
     }
 
     public function viewCart($userId)
     {
-        return response()->json($this->repository->getCartByUser($userId));
+        try {
+
+            $data = $this->repository->getCartByUser($userId);
+
+            return ResponseHelpers::success($data, 'Menampilkan data cart');
+
+        } catch (\Exception $e) {
+
+            return ResponseHelpers::error(null, 'Gagal menampilkan cart : ' . $e->getMessage());
+
+        }
     }
 
     public function updateCartItem(CartRequest $request, $itemId)
     {
-        $data = $request->validated();
-        return response()->json($this->repository->updateQty($itemId, $data));
+        try {
+
+            $data = $request->validated();
+            $result = $this->repository->updateQty($itemId, $data);
+
+            return ResponseHelpers::success($result, 'Cart berhasil di update');
+
+        } catch (\Exception $e) {
+
+            return ResponseHelpers::error(null, 'Gagal update cart : ' . $e->getMessage());
+
+        }
     }
 
     public function removeCartItem($itemId)
     {
-        return response()->json($this->repository->deleteItem($itemId));
+        try {
+
+            $data = $this->repository->deleteItem($itemId);
+
+            return ResponseHelpers::success($data, 'Item berhasil dihapus dari cart');
+
+        } catch (\Exception $e) {
+
+            return ResponseHelpers::error(null, 'Gagal hapus item cart : ' . $e->getMessage());
+
+        }
     }
 
-    public function checkout(CartRequest $request, $userId)
+    public function checkout($userId)
     {
-        $data = $request->validated();
-        return response()->json($this->repository->checkout($userId));
+        try {
+
+            $data = $this->repository->checkout($userId);
+
+            return ResponseHelpers::success($data, 'Checkout berhasil');
+
+        } catch (\Exception $e) {
+
+            return ResponseHelpers::error(null, 'Gagal checkout : ' . $e->getMessage());
+
+        }
     }
 }
