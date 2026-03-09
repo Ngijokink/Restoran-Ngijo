@@ -32,14 +32,5 @@ class TransactionController extends Controller
         return response()->json($this->repository->createTransaction($data));
     }
 
-    public function update(TransactionRequest $request, $id)
-    {
-        $data = $request->validated();
-        return response()->json($this->repository->updateTransaction($id, $data));
-    }
-
-    public function destroy($id)
-    {
-        return response()->json($this->repository->deleteTransaction($id));
-    }
+    
 }

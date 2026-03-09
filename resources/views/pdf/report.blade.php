@@ -1,102 +1,50 @@
-@php
-    // Ambil report pertama dari collection, bisa null jika tidak ada data
-    $report = is_array($reports) ? reset($reports) : $reports->first();
-@endphp
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Laporan Penjualan - {{ optional($report)->report_date ?? '-' }}</title>
+    <title>Daily Statistics</title>
     <style>
-        body { font-family: 'Helvetica', Arial, sans-serif; color: #333; line-height: 1.4; margin: 20px; }
-        .header { text-align: center; border-bottom: 2px solid #444; padding-bottom: 10px; margin-bottom: 20px; }
-        
-        /* Layout Tabel Utama */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-        th { background-color: #f8f9fa; font-size: 11px; text-transform: uppercase; }
-        
-        /* Penataan Angka */
-        .text-right { text-align: right; }
-        .font-bold { font-weight: bold; }
-        
-        /* Sektor Informasi Ringkas */
-        .summary-box { margin-bottom: 20px; width: 100%; }
-        .summary-item { display: inline-block; width: 30%; border: 1px solid #ddd; padding: 10px; background: #fff; }
-
-        .footer { margin-top: 30px; font-size: 10px; color: #777; text-align: center; }
-        
-        /* Warna Khusus Pendapatan */
-        .revenue-cell { color: #2d6a4f; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
+        th, td { border: 1px solid #000; padding: 5px; text-align: left; }
+        h2 { margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1 style="margin: 0; font-size: 20px;">LAPORAN RINGKASAN HARIAN</h1>
-        <p style="margin: 5px 0;">Restoran Ngijo - Tanggal: <strong>{{ optional($report)->report_date ?? '-' }}</strong></p>
-    </div>
-
-    <div class="summary-box">
-        <div class="summary-item">
-            <small>TOTAL ORDER</small><br>
-            <strong>{{ optional($report)->total_orders ?? 0 }} Pesanan</strong>
-        </div>
-        <div class="summary-item">
-            <small>TOTAL TRANSAKSI</small><br>
-            <strong>{{ optional($report)->total_transactions ?? 0 }} Kali</strong>
-        </div>
-        <div class="summary-item">
-            <small>TOTAL PAID (SUKSES)</small><br>
-            <strong style="color: #2d6a4f;">Rp {{ number_format(optional($report)->total_success_amount ?? 0, 0, ',', '.') }}</strong>
-        </div>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Keterangan</th>
-                <th class="text-right">Nilai / Jumlah</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Total Revenue (Potensi Pendapatan)</td>
-                <td class="text-right">Rp {{ number_format(optional($report)->total_order_revenue ?? 0, 0, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td><strong>Total Success Amount (Paid)</strong></td>
-                <td class="text-right revenue-cell">Rp {{ number_format(optional($report)->total_success_amount ?? 0, 0, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Total Volume Pesanan</td>
-                <td class="text-right">{{ optional($report)->total_orders ?? 0 }} Order</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Total Transaksi Diproses</td>
-                <td class="text-right">{{ optional($report)->total_transactions ?? 0 }} Transaksi</td>
-            </tr>
-        </tbody>
-    </table>
-
-    @if(optional($report)->total_per_method)
-    <h3 style="font-size: 14px; margin-top: 20px;">Breakdown Per Metode:</h3>
-    <ul>
-        @foreach(optional($report)->total_per_method as $method => $amount)
-            <li>{{ strtoupper($method) }}: Rp {{ number_format($amount, 0, ',', '.') }}</li>
+<h2>Order Statistics - {{ $date }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Menu</th>
+            <th>Total Order</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($orderStats as $item)
+        <tr>
+            <td>{{ $item->menu_name }}</td>
+            <td>{{ $item->total_order }}</td>
+        </tr>
         @endforeach
-    </ul>
-    @endif
+    </tbody>
+</table>
 
-    <div class="footer">
-        <p>Data diambil pada sistem: {{ optional($report)->created_at ?? '-' }}</p>
-        <p><em>Dokumen ini sah dihasilkan secara digital oleh Bagian Report (Orang ke-3).</em></p>
-    </div>
+<h2>Transaction Statistics - {{ $date }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Menu</th>
+            <th>Total Transaction</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($transactionStats as $item)
+        <tr>
+            <td>{{ $item->menu_name }}</td>
+            <td>{{ $item->total_transaction }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 
 </body>
 </html>

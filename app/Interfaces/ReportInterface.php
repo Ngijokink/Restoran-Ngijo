@@ -4,9 +4,18 @@ namespace App\Interfaces;
 
 interface ReportInterface
 {
-   public function allReport(?string $from = null, ?string $to = null);
-   public function findReport($id);
-   public function createReport(array $data);
-   public function updateReport($id, array $data);
-   public function deleteReport($id);
+    
+    public function allReports(string $date);
+
+
+    public function findByDate(string $date);
+
+
+    public function createReport(array $data);
+
+
+    public function getDailyOrderStats(string $date);
+
+   
+    public function getDailyTransactionStats(string $date);
 }

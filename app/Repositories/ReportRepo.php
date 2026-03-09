@@ -2,47 +2,72 @@
 
 namespace App\Repositories;
 
-use App\Models\Report;
-use Illuminate\Support\Collection;
 use App\Interfaces\ReportInterface;
+use App\Models\Orders;
+use App\Models\Transaction;
 
+class ReportRepo implements ReportInterface{
+    public function allReports(string $date)
+    {
+        return Orders::whereDate('created_at', $date)->get();
+    }
 
-class ReportRepo implements ReportInterface
-{
-   public function allReport(?string $from = null, ?string $to = null): Collection
-   {
-       $query = Report::query();
+    public function findByDate(string $date)
+    {
+        return Orders::whereDate('created_at', $date)->first();
+    }
 
-       if ($from) {
-           $query->whereDate('created_at', '>=', $from);
-       }
+    public function createReport(array $data)
+    {
+        // di sini kita otomatis generate dari DB jika $data kosong
+        $date = $data['report_date'] ?? now()->format('Y-m-d');
 
-       if ($to) {
-           $query->whereDate('created_at', '<=', $to);
-       }
+        // order stats
+        $orders = Orders::whereDate('created_at', $date)->get();
+        $totalOrders = $orders->count();
+        $totalOrderRevenue = $orders->sum('total_amount');
+        $orderStatusBreakdown = [
+            'PAID' => $orders->where('status', 'PAID')->count(),
+            'PENDING' => $orders->where('status', 'PENDING')->count(),
+            'CANCELLED' => $orders->where('status', 'CANCELLED')->count(),
+        ];
 
-       return $query->get();
-   }
+        // transaction stats
+        $transactions = Transaction::whereDate('created_at', $date)->get();
+        $totalTransactions = $transactions->count();
+        $totalSuccessAmount = $transactions->where('status', 'SUCCESS')->sum('amount');
+        $totalPerMethod = $transactions->groupBy('payment_method')->map->sum('amount');
 
-   public function findReport($id): ?Report
-   {
-       return Report::find($id);
-   }
+        return [
+            'report_date' => $date,
+            'total_orders' => $totalOrders,
+            'total_order_revenue' => $totalOrderRevenue,
+            'order_status_breakdown' => $orderStatusBreakdown,
+            'total_transactions' => $totalTransactions,
+            'total_success_amount' => $totalSuccessAmount,
+            'total_per_method' => $totalPerMethod
+        ];
+    }
 
-   public function createReport(array $data): Report
-   {
-       return Report::create($data);
-   }
+    public function getDailyOrderStats(string $date)
+    {
+        $orders = Orders::whereDate('created_at', $date)->get();
+        return $orders->groupBy('menu_id')->map(function ($items) {
+            return [
+                'menu_name' => $items->first()->menu->name,
+                'total_order' => $items->count(),
+            ];
+        })->values();
+    }
 
-   public function updateReport($id, array $data): bool
-   {
-       $report = Report::find($id);
-       return $report ? $report->update($data) : false;
-   }
-
-   public function deleteReport($id): bool
-   {
-       $report = Report::find($id);
-       return $report ? $report->delete() : false;
-   }
-}  
+    public function getDailyTransactionStats(string $date)
+    {
+        $transactions = Transaction::whereDate('created_at', $date)->get();
+        return $transactions->groupBy('menu_id')->map(function ($items) {
+            return [
+                'menu_name' => $items->first()->menu->name,
+                'total_transaction' => $items->sum('amount'),
+            ];
+        })->values();
+    }
+}

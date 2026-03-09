@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Interfaces\ReportInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ReportResource;
-use App\Models\Report;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
@@ -18,52 +17,53 @@ class ReportController extends Controller
         $this->repository = $repository;
     }
 
-    public function index()
+    // ambil semua report
+    public function index(Request $request)
     {
-        return response()->json(ReportResource::collection($this->repository->allReport()));
+        $date = $request->date;
+
+        $reports = $this->repository->allReports($date);
+
+        return ReportResource::collection($reports);
     }
 
-    public function show($id)
+    // ambil report berdasarkan tanggal
+    public function show($date)
     {
-        $report = $this->repository->findReport($id);
-        if (!$report) {
-    return response()->json( $this->repository->findReport($id) , 404);
-        }
-        return response()->json(new ReportResource($report));
+        $report = $this->repository->findByDate($date);
+
+        return new ReportResource($report);
     }
 
+    // membuat report
     public function store(Request $request)
-    {
-        $data = $request->all();
-        return response()->json(new ReportResource($this->repository->createReport($data)));
-    }
+{
+  
+    $date = $request->report_date ?? now()->format('Y-m-d');
 
-    public function update(Request $request, $id)
-    {
-        $report = $this->repository->findReport($id);
-        if (!$report) {
-            return response()->json($this->repository->findReport($id), 404);
-        }
-        $data = $request->all();
-        $this->repository->updateReport($id, $data);
-        return response()->json(new ReportResource($this->repository->findReport($id)));
-    }
+    $reportData = $this->repository->createReport(['report_date' => $date]);
 
-    public function destroy($id)
-    {
-        return response()->json($this->repository->deleteReport($id));
-    }
-
-    public function exportPdf()
-    {
-        // Mengambil semua data laporan
-        $reports = $this->repository->allReport();
-
-        // Load view dan masukkan datanya
-        $pdf = Pdf::loadView('pdf.report', compact('reports'));
-
-        // Download file PDF
-        return $pdf->download('laporan-report.pdf');
-    }
+    return response()->json($reportData);
 }
 
+    public function orderStats($date)
+    {
+        return response()->json(
+            $this->repository->getDailyOrderStats($date)
+        );
+    }
+
+   public function exportPdf($date)
+{
+    $orderStats = $this->repository->getDailyOrderStats($date);
+    $transactionStats = $this->repository->getDailyTransactionStats($date);
+
+    $pdf = Pdf::loadView('reports.combined-stats-pdf', [
+        'orderStats' => $orderStats,
+        'transactionStats' => $transactionStats,
+        'date' => $date
+    ]);
+
+    return $pdf->download('daily-stats-'.$date.'.pdf');
+}
+}
