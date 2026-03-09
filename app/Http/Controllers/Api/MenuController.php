@@ -34,7 +34,7 @@ use App\Helpers\UploadHelper;
 
     $menu = $this->repository->createMenu($data);
     $menu->image_url = $menu->image
-        ? asset('storage/'.$menu->image)
+        ? url('storage/'.$menu->image)
         : null;
 
     return ResponseHelpers::success($menu, 'Berhasil Membuat Menu');
