@@ -1,7 +1,10 @@
 import axios from "axios";
 
-const api = axios.create ({
-  baseURL: "https://unbeaten-rarely-ardella.ngrok-free.dev/api"
+const api = axios.create({
+  baseURL: "https://unbeaten-rarely-ardella.ngrok-free.dev/api",
+  headers: {
+    "ngrok-skip-browser-warning": "true"
+  }
 });
 
 export const getProduct = (callback) => {
