@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Daily Report - {{ $report['report_date'] }}</title>
+    <title>Laporan Harian - {{ $report['report_date'] }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,8 +65,8 @@
 </head>
 <body>
     <div class="header">
-        <h1>Daily Report</h1>
-        <p>Date: {{ \Carbon\Carbon::parse($report['report_date'])->format('F j, Y') }}</p>
+        <h1>Laporan Harian</h1>
+        <p>tanggal: {{ \Carbon\Carbon::parse($report['report_date'])->format('F j, Y') }}</p>
     </div>
 
     <div class="section">

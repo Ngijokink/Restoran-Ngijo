@@ -15,7 +15,13 @@ class Kernel extends ConsoleKernel
  $schedule->call(function () {
         app(\App\Repositories\ReportRepo::class)->createReport([]);
     })->dailyAt('12:00');
+
+    $schedule->call(function () {
+            \Illuminate\Support\Facades\Cache::flush();
+            \Illuminate\Support\Facades\Log::info("Sistem: Cache telah dibersihkan otomatis.");
+        })->dailyAt('00:00');
     }
+
 
     /**
      * Register the commands for the application.

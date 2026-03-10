@@ -25,23 +25,23 @@ class ReportRepo implements ReportInterface{
         // order stats
         $orders = Orders::whereDate('created_at', $date)->get();
         $totalOrders = $orders->count();
-        $totalOrderRevenue = $orders->sum('total_amount');
+        $totalOrderRevenue = $orders->sum('total_price');
         $orderStatusBreakdown = [
-            'PAID' => $orders->where('status', 'PAID')->count(),
-            'PENDING' => $orders->where('status', 'PENDING')->count(),
-            'CANCELLED' => $orders->where('status', 'CANCELLED')->count(),
+            'PAID' => $orders->where('status', 'PAID')->count() + $orders->where('status', 'paid')->count(),
+            'PENDING' => $orders->where('status', 'PENDING')->count() + $orders->where('status', 'pending')->count(),
+            'CANCELLED' => $orders->where('status', 'CANCELLED')->count() + $orders->where('status', 'cancelled')->count(),
         ];
 
         // transaction stats
         $transactions = Transaction::whereDate('created_at', $date)->get();
         $totalTransactions = $transactions->count();
-        $totalSuccessAmount = $transactions->where('status', 'SUCCESS')->sum('amount');
+        $totalSuccessAmount = $transactions->whereIn('status', ['SUCCESS', 'success', 'paid'])->sum('total');
         // ignore transactions without a payment method
         $totalPerMethod = $transactions
-            ->whereNotNull('payment_method')
-            ->filter(fn($t) => trim($t->payment_method) !== '')
-            ->groupBy('payment_method')
-            ->map->sum('amount');
+            ->whereNotNull('method')
+            ->filter(fn($t) => trim($t->method) !== '')
+            ->groupBy('method')
+            ->map->sum('total');
 
         return [
             'report_date' => $date,
