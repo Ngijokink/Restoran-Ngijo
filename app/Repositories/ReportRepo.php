@@ -36,7 +36,12 @@ class ReportRepo implements ReportInterface{
         $transactions = Transaction::whereDate('created_at', $date)->get();
         $totalTransactions = $transactions->count();
         $totalSuccessAmount = $transactions->where('status', 'SUCCESS')->sum('amount');
-        $totalPerMethod = $transactions->groupBy('payment_method')->map->sum('amount');
+        // ignore transactions without a payment method
+        $totalPerMethod = $transactions
+            ->whereNotNull('payment_method')
+            ->filter(fn($t) => trim($t->payment_method) !== '')
+            ->groupBy('payment_method')
+            ->map->sum('amount');
 
         return [
             'report_date' => $date,

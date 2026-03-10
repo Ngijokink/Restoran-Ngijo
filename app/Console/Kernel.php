@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
  $schedule->call(function () {
         app(\App\Repositories\ReportRepo::class)->createReport([]);
-    })->dailiyAt('10:00');
+    })->dailyAt('12:00');
     }
 
     /**
