@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --hijau-tua: #1a3d2b;
+  --hijau-sedang: #2d6a4f;
+  --hijau-muda: #52b788;
+  --hijau-terang: #95d5b2;
+  --hijau-pucat: #d8f3dc;
+  --krem: #fefae0;
+  --coklat-muda: #e0c49a;
+  --emas: #c9a84c;
+  --emas-muda: #f0d080;
+
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Lora', serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--krem);
+}
+
+/* Hal yang tidak bisa dilakukan Tailwind */
+.font-playfair { font-family: var(--font-display); }
+.font-lora     { font-family: var(--font-body); }
+
+.batik-bg {
+  background-color: var(--krem);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='2' fill='%2322543d' opacity='0.15'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%2322543d' opacity='0.15'/%3E%3Ccircle cx='60' cy='0' r='2' fill='%2322543d' opacity='0.15'/%3E%3Ccircle cx='0' cy='60' r='2' fill='%2322543d' opacity='0.15'/%3E%3Ccircle cx='60' cy='60' r='2' fill='%2322543d' opacity='0.15'/%3E%3Cpath d='M15 30 Q30 15 45 30 Q30 45 15 30Z' fill='none' stroke='%2322543d' stroke-width='0.8' opacity='0.1'/%3E%3C/svg%3E");
+}
+
+.emas-glow { text-shadow: 0 0 40px rgba(201,168,76,0.4); }
+
+.ornamen-garis {
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--emas), transparent);
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--hijau-sedang), transparent);
+}
+
+.menu-divider {
+  height: 1px;
+  background: linear-gradient(to right, var(--hijau-pucat), transparent);
+  margin: 0 18px 0 20px;
+}
+
+/* Pseudo-elements — tidak bisa pakai Tailwind */
+.header-stripe::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg, transparent, transparent 8px,
+    rgba(255,255,255,0.03) 8px, rgba(255,255,255,0.03) 16px
+  );
+}
+
+.batik-border-stripe::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--hijau-tua) 0px, var(--hijau-tua) 12px,
+    var(--emas) 12px, var(--emas) 24px
+  );
+  opacity: 0.5;
+}
+
+.card-accent::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--hijau-muda), var(--hijau-sedang));
+}
+
+.card-header-deco::after {
+  content: '✿';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.1);
+  font-size: 2rem;
+}
+
+.batik-strip {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--hijau-tua) 0px, var(--hijau-tua) 12px,
+    var(--emas) 12px, var(--emas) 24px
+  );
+}
+
+.left-ornamen-garis {
+  width: 80px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--emas));
+}
+.left-ornamen-garis.kanan {
+  background: linear-gradient(to left, transparent, var(--emas));
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: -100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  transition: left 0.4s;
+}
+.btn-shine:hover::after { left: 100%; }
+
+.form-input::placeholder { color: #bbb; font-style: italic; }
+.form-input:focus {
+  border-color: var(--hijau-sedang) !important;
+  box-shadow: 0 0 0 3px rgba(82,183,136,0.15);
+}
+
+/* Animasi */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeUp { animation: fadeUp 0.5s ease both; }
+
+@keyframes spin-leaf {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-leaf { animation: spin-leaf 1.5s linear infinite; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+.animate-shake { animation: shake 0.3s ease; }
+
+@keyframes spin-btn {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-btn { animation: spin-btn 0.7s linear infinite; }
