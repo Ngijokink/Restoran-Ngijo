@@ -12,6 +12,7 @@ use App\Http\Resources\Auth\AdminResource;
 use App\Http\Resources\Auth\AuthResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller
 {
@@ -64,20 +65,28 @@ class AuthController extends Controller
     }
 
     public function login(LoginRequest $request)
-    {
-        try {
-            $request->validated();
-            $result = $this->handler->login($request);
+{
+    try {
+        $request->validated();
 
-            if (!$result) {
-                return ResponseHelpers::error(null, 'Email atau password salah.', 401);
-            }
+        $result = $this->handler->login($request);
 
-            return ResponseHelpers::success($result, 'Login berhasil.');
-        } catch (\Throwable $e) {
-            return ResponseHelpers::error(null, $e->getMessage(), 500);
+        if (!$result) {
+            return ResponseHelpers::error(null, 'Email atau password salah.', 401);
         }
+
+        $cacheKey = "users_" . $result['id_user'];
+
+        $user = Cache::remember($cacheKey, 60, function () use ($result) {
+            return $result;
+        });
+
+        return ResponseHelpers::success($user, 'Login berhasil.');
+
+    } catch (\Throwable $e) {
+        return ResponseHelpers::error(null, $e->getMessage(), 500);
     }
+}
 
     public function logout(Request $request)
     {
