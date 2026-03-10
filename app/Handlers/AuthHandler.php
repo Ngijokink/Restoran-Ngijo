@@ -93,8 +93,11 @@ class AuthHandler
     $token = $user->createToken($tokenName)->plainTextToken;
 
     return [
-        $tokenName => $token,   // key dinamis sesuai role
-        'role'     => $user->role,
+        'id_user' => $user->id_user,
+        'name' => $user->name,
+        'email' => $user->email,
+        'role' => $user->role,
+        $tokenName => $token
     ];
 }
 
