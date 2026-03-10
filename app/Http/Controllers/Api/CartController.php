@@ -37,7 +37,7 @@ class CartController extends Controller
     {
         try {
 
-            $data = $this->repository->getCartByUser($userId);
+            $data = $this->repository->getCartById($userId);
 
             return ResponseHelpers::success($data, 'Menampilkan data cart');
 

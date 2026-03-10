@@ -12,19 +12,29 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('table_menus', function (Blueprint $table) {
-            $table->id('id_menu');
-            $table->unsignedBigInteger('category_id');
-            $table->string('menu');
-            $table->integer('price');
-            $table->integer('stock');
-            $table->enum('is_available',['ada','kosong']);
-            $table->string('image')->nullable();
-            $table->timestamps();
-            
 
-            $table->foreign('category_id')->references('id_category')->on('table_categories')->onDelete('cascade');
-        });
-    }
+        $table->id('id_menu');
+
+        $table->unsignedBigInteger('category_id');
+
+        $table->string('name');
+
+        $table->decimal('price',12,2);
+
+        $table->integer('stock');
+
+        $table->boolean('is_available')->default(true);
+
+        $table->string('image')->nullable();
+
+        $table->timestamps();
+
+        $table->foreign('category_id')
+            ->references('id_category')
+            ->on('table_categories')
+            ->onDelete('cascade');
+            });
+        }
 
     /**
      * Reverse the migrations.

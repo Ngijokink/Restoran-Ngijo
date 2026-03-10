@@ -3,7 +3,7 @@ namespace App\Interfaces;
 
 interface CartInterface
 {
-    public function getCartByUser($userId);
+    public function getCartById($cartId);
 
     public function addToCart(array $data);
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Interfaces\CartInterface;
@@ -6,20 +7,21 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Menu;
 use App\Models\Orders;
-use App\Models\Item;
+use App\Models\OrderItem;
 
 class CartRepo implements CartInterface
 {
 
-    public function getCartByUser($userId)
+    public function getCartById($cartId)
     {
         return Cart::with('items.menu')
-            ->where('user_id', $userId)
+            ->where('id_cart', $cartId)
             ->first();
     }
 
     public function addToCart(array $data)
     {
+
         $cart = Cart::firstOrCreate([
             'user_id' => $data['user_id']
         ]);
@@ -32,18 +34,33 @@ class CartRepo implements CartInterface
 
         $subtotal = $price * $qty;
 
+        $existingItem = CartItem::where('id_cart', $cart->id_cart)
+            ->where('id_menu', $menu->id_menu)
+            ->first();
+
+        if ($existingItem) {
+
+            $existingItem->qty += $qty;
+            $existingItem->subtotal = $existingItem->qty * $existingItem->price;
+            $existingItem->save();
+
+            return $existingItem;
+        }
+
         return CartItem::create([
-            'cart_id' => $cart->id_cart,
-            'menu_id' => $menu->id_menu,
+            'id_cart' => $cart->id_cart,
+            'id_menu' => $menu->id_menu,
             'qty' => $qty,
             'price' => $price,
             'subtotal' => $subtotal
         ]);
     }
 
-    public function updateQty($cartItemId, $qty)
+    public function updateQty($cartItemId, $data)
     {
         $item = CartItem::findOrFail($cartItemId);
+
+        $qty = $data['qty'];
 
         $item->qty = $qty;
         $item->subtotal = $item->price * $qty;
@@ -63,10 +80,11 @@ class CartRepo implements CartInterface
 
     public function checkout($userId)
     {
+
         $cart = Cart::with('items')->where('user_id', $userId)->first();
 
-        if (!$cart) {
-            return null;
+        if (!$cart || $cart->items->isEmpty()) {
+            throw new \Exception("Cart kosong");
         }
 
         $total = $cart->items->sum('subtotal');
@@ -75,21 +93,13 @@ class CartRepo implements CartInterface
             'user_id' => $userId,
             'total_price' => $total,
             'status' => 'pending',
-            'order_code' => 'ORD-' . rand(10000,99999)
+            'order_code' => 'ORD-' . rand(10000, 99999),
+            
         ]);
 
-        foreach ($cart->items as $item) {
+       
 
-            Item::create([
-                'order_id' => $order->id_order,
-                'menu_id' => $item->menu_id,
-                'qty' => $item->qty,
-                'price' => $item->price,
-                'subtotal' => $item->subtotal
-            ]);
-        }
-
-        CartItem::where('cart_id', $cart->id_cart)->delete();
+        CartItem::where('id_cart', $cart->id_cart)->delete();
 
         return $order;
     }

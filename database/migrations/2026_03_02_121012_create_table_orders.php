@@ -11,17 +11,28 @@
          */
         public function up(): void
         {
-            Schema::create('table_orders', function (Blueprint $table) {
-                $table->unsignedBigInteger('id_order')->primary();
-                $table->unsignedBigInteger('user_id');
-                $table->integer('total_price');
-                $table->string('status');
-                $table->string('order_code');
-                $table->dateTime('paid_at')->nullable();
-                $table->timestamps();
+            Schema::create('orders', function (Blueprint $table) {
 
-                $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
-            });
+        $table->id('id_order');
+
+        $table->unsignedBigInteger('user_id');
+
+        $table->string('order_code');
+
+
+        $table->string('status')->default('pending');
+
+        $table->integer('total_price')->default(0);
+
+
+
+        $table->timestamps();
+
+        $table->foreign('user_id')
+          ->references('id_user')
+          ->on('users')
+          ->onDelete('cascade');
+});
         }
 
         /**

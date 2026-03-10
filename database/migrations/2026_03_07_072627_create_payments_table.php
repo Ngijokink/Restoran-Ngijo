@@ -8,15 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
-    $table->id();
+    Schema::create('payments', function (Blueprint $table) {
 
-    $table->unsignedBigInteger('order_id');
+    $table->id('id_payment');
 
-    $table->foreign('order_id')
-          ->references('id_order')
-          ->on('table_orders')
-          ->onDelete('cascade');
+    $table->unsignedBigInteger('id_cart');
 
     $table->decimal('amount', 12, 2);
 
@@ -30,7 +26,13 @@ return new class extends Migration
     $table->timestamp('paid_at')->nullable();
 
     $table->timestamps();
+
+    $table->foreign('id_cart')
+          ->references('id_cart')
+          ->on('carts')
+          ->onDelete('cascade');
 });
+
     }
 
     public function down(): void

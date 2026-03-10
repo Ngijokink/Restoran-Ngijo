@@ -11,9 +11,9 @@ class PaymentRepo implements PaymentInterface
         return Payment::create($data);
     }
 
-    public function findByOrderId(int $idOrder)
+    public function findByCartId(int $cartId)
     {
-        return Payment::where('id_order', $idOrder)->first();
+        return Payment::where('id_cart', $cartId)->first();
     }
 
     public function updateStatus(int $paymentId, string $status)

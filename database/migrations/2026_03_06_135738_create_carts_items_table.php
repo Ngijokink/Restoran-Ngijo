@@ -7,27 +7,30 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('cart_items', function (Blueprint $table) {
-            $table->id('id_cart_item');
-            $table->unsignedBigInteger('cart_id');
-            $table->unsignedBigInteger('menu_id');
+       Schema::create('cart_items', function (Blueprint $table) {
 
-            $table->integer('qty');
-            $table->integer('price');
-            $table->integer('subtotal');
+        $table->id('id_cart_item');
 
-            $table->timestamps();
+        $table->unsignedBigInteger('id_cart');
+        $table->unsignedBigInteger('id_menu');
 
-            $table->foreign('cart_id')
-                  ->references('id_cart')
-                  ->on('carts')
-                  ->onDelete('cascade');
+        $table->integer('qty');
 
-            $table->foreign('menu_id')
-                  ->references('id_menu')
-                  ->on('table_menus')
-                  ->onDelete('cascade');
-        });
+        $table->decimal('price',12,2);
+        $table->decimal('subtotal',12,2);
+
+        $table->timestamps();
+
+        $table->foreign('id_cart')
+            ->references('id_cart')
+            ->on('carts')
+            ->onDelete('cascade');
+
+        $table->foreign('id_menu')
+            ->references('id_menu')
+            ->on('table_menus')
+            ->onDelete('cascade');
+});
     }
 
     public function down(): void

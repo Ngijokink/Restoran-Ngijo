@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -23,38 +22,52 @@ class PaymentController extends Controller
 
             $data = $request->validated();
 
-            if ($request->hasFile('image')) {
-                $data['proof'] = UploadHelper::UploadImage($request->file('image'));
-            } else {
-                $data['proof'] = null;
+            if ($request->hasFile('proof')) {
+
+                $data['proof'] = UploadHelper::UploadImage(
+                    $request->file('proof')
+                );
+
             }
 
             $payment = $this->repository->create($data);
 
-            $payment->image_url = $payment->proof
+            $payment->proof_url = $payment->proof
                 ? asset('storage/' . $payment->proof)
                 : null;
 
-            return ResponseHelpers::success($payment, 'Terimakasih, pembayaran berhasil dikirim');
+            return ResponseHelpers::success(
+                $payment,
+                'Pembayaran berhasil diproses'
+            );
 
         } catch (\Exception $e) {
 
-            return ResponseHelpers::error(null, 'Gagal melakukan pembayaran : ' . $e->getMessage());
+            return ResponseHelpers::error(
+                null,
+                'Gagal melakukan pembayaran : '.$e->getMessage()
+            );
 
         }
     }
 
-    public function showByOrderId($id)
+    public function showByCartId($cartId)
     {
         try {
 
-            $payment = $this->repository->findByOrderId($id);
+            $payment = $this->repository->findByCartId($cartId);
 
-            return ResponseHelpers::success($payment, 'Data pembayaran');
+            return ResponseHelpers::success(
+                $payment,
+                'Data pembayaran'
+            );
 
         } catch (\Exception $e) {
 
-            return ResponseHelpers::error(null, 'Gagal mengambil data pembayaran : ' . $e->getMessage());
+            return ResponseHelpers::error(
+                null,
+                'Gagal mengambil data pembayaran : '.$e->getMessage()
+            );
 
         }
     }
@@ -63,13 +76,22 @@ class PaymentController extends Controller
     {
         try {
 
-            $payment = $this->repository->updateStatus($paymentId, $status);
+            $payment = $this->repository->updateStatus(
+                $paymentId,
+                $status
+            );
 
-            return ResponseHelpers::success($payment, 'Status pembayaran berhasil diupdate');
+            return ResponseHelpers::success(
+                $payment,
+                'Status pembayaran berhasil diupdate'
+            );
 
         } catch (\Exception $e) {
 
-            return ResponseHelpers::error(null, 'Gagal update status pembayaran : ' . $e->getMessage());
+            return ResponseHelpers::error(
+                null,
+                'Gagal update status pembayaran : '.$e->getMessage()
+            );
 
         }
     }

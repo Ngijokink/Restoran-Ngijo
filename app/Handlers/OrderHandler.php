@@ -45,33 +45,54 @@ class OrderHandler
         return $this->orderRepo->deleteOrder($id);
     }
 
-    public function generateCode($categoryId, $menuId)
-{
-    $date = Carbon::now()->format('Ymd');
-
-    return "ORD-{$categoryId}-{$menuId}-{$date}";
-}
 
 public function createOrder($request)
 {
-    $menu = $this->MenuRepo->findMenu($request->menu_id);
+    $menus = $request->menus;
 
-    if (!$menu) {
-    throw new \Exception("Menu tidak ditemukan");
+    if (!$menus) {
+        throw new \Exception("Menu tidak boleh kosong");
     }
 
-    $orderCode = $this->generateCode(
-        $menu->category_id,
-        $menu->id_menu
-    );
+    $orderCode = "ORD-" . now()->format('Ymd') . "-" . rand(1000,9999);
 
-    $data = [
+    $order = $this->orderRepo->createOrder([
         'user_id' => auth()->id(),
         'order_code' => $orderCode,
-        'total_price' => $request->total_price,
         'status' => 'pending'
-    ];
+    ]);
 
-    return $this->orderRepo->createOrder($data);
+    $cart = $order->cart()->create([
+        'user_id' => auth()->id(),
+        'total_price' => 0
+    ]);
+
+    $total = 0;
+
+    foreach ($menus as $item) {
+
+        $menu = $this->MenuRepo->findMenu($item['id_menu']);
+
+        if (!$menu) {
+            throw new \Exception("Menu tidak ditemukan");
+        }
+
+        $subtotal = $menu->price * $item['qty'];
+
+        $cart->cartItems()->create([
+            'id_menu' => $menu->id_menu,
+            'qty' => $item['qty'],
+            'price' => $menu->price,
+            'subtotal' => $subtotal
+        ]);
+
+        $total += $subtotal;
+    }
+
+    $cart->update([
+        'total_price' => $total
+    ]);
+
+    return $order->load('cart.cartItems.menu');
 }
 }

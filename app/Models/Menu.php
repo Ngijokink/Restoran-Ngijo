@@ -14,7 +14,7 @@ class Menu extends Model
 
     protected $fillable = [
         'category_id',
-        'menu',
+        'name',
         'price',
         'stock',
         'is_available',
@@ -24,5 +24,9 @@ class Menu extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id_category');
+    }
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class, 'id_menu', 'id_menu');
     }
 }

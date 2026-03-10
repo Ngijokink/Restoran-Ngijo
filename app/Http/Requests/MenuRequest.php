@@ -14,7 +14,7 @@ class MenuRequest extends FormRequest
     public function rules()
     {
         return [
-            'menu'         => 'required|string|max:255',
+            'name'         => 'required|string|max:255',
             'category_id'  => 'required|exists:table_categories,id_category',
             'price'        => 'required|integer|min:0',
             'stock'        => 'required|integer|min:0',

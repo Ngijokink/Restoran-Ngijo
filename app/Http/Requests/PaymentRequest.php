@@ -13,10 +13,9 @@ class PaymentRequest extends FormRequest
     public function rules()
     {
         return [
-        'order_id' => 'required|integer|exists:table_orders,id_order',
+        'id_cart' => 'required|integer|exists:carts,id_cart',
         'amount' => 'required|numeric|min:0',
         'method' => ['required', Rule::in(['cash', 'qris', 'transfer'])],
-        'status' => ['required', Rule::in(['pending', 'paid', 'failed'])],
         'proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         'paid_at' => 'nullable|date',
         ];
