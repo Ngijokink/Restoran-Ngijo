@@ -27,4 +27,18 @@ class PaymentRequest extends FormRequest
             'status' => ['required', Rule::in(['pending', 'paid', 'failed'])],
         ];
     }   
+
+    public function messages()  
+    {
+        return [
+        'id_cart.required' => 'silahkan masukkan id_cart',
+        'id_cart_integer'=> 'id harus berupa angka',
+        'id_cart.exist'=> 'id tidak ditemukan',
+        'amount.required'=> 'silahkan masukkan nominal',
+        'amount.numeric'=> 'harus berupa angka',
+        'method.required'=> 'anda mau qris,tf atau cash',
+        ''=> '',
+
+        ];
+    }
 }

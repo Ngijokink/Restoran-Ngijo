@@ -25,4 +25,11 @@ class AdminRequest extends FormRequest
             'role' => 'required|in:admin,pelanggan,manager,staff'
         ];
     }
+
+    public function messages(): array
+    {
+        return   [
+            'role.required'=> 'silahkan masukkan role',
+        ];
+    }
 }

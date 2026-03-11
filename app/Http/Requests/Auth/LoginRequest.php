@@ -26,4 +26,19 @@ class LoginRequest extends FormRequest
             'password' => 'required|min:8'
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'email.required'=> 'silahkan masukkan email',
+            'email.email'=> 'silahkan masukkan format email yang benar',
+
+
+            'password.required'=> 'masukkan password',
+            'password.min'=> 'minimal 8 karakter',
+
+
+
+        ];
+    }
 }
