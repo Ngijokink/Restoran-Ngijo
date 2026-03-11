@@ -1,14 +1,10 @@
 <?php
-
 namespace App\Http\Controllers\Api;
-
 use App\Helpers\ResponseHelpers;
 use Illuminate\Http\Request;
 use App\Interfaces\MenusInterface;
 use App\Http\Controllers\Controller;
 use App\Helpers\UploadHelper;
-use App\Http\Requests\MenuRequest;
-
 
 class MenuController extends Controller
 {
@@ -19,102 +15,76 @@ class MenuController extends Controller
         $this->repository = $repository;
     }
 
+    /**
+     * Buat image_url pakai APP_URL dari config,
+     * bukan dari request host — supaya ngrok URL yang keluar.
+     */
+    private function imageUrl(?string $imagePath): ?string
+    {
+        if (!$imagePath) return null;
+        $base = rtrim(config('app.url'), '/');
+        return "{$base}/storage/{$imagePath}";
+    }
+
     public function index()
     {
-        try {
+        $menus = $this->repository->allMenu();
 
-            $menus = $this->repository->allMenu();
-
-            return ResponseHelpers::success($menus,'Data menu');
-
-        } catch (\Exception $e) {
-
-            return ResponseHelpers::error(null,$e->getMessage());
-
+        foreach ($menus as $menu) {
+            $menu->image_url = $this->imageUrl($menu->image);
         }
+
+        return ResponseHelpers::success($menus, 'Data Menu');
     }
 
     public function show($id)
     {
-        try {
+        $menu = $this->repository->findMenu($id);
+        $menu->image_url = $this->imageUrl($menu->image);
 
-            $menu = $this->repository->findMenu($id);
-
-            if (!$menu) {
-                return ResponseHelpers::error(null,'Menu tidak ditemukan');
-            }
-
-            return ResponseHelpers::success($menu,'Detail menu');
-
-        } catch (\Exception $e) {
-
-            return ResponseHelpers::error(null,$e->getMessage());
-
-        }
+        return ResponseHelpers::success($menu, 'Data Menu');
     }
 
-    public function store(MenuRequest $request)
-    {
-        try {
+    public function store(Request $request)
+{
+    $data = $request->all();
 
-            $data = $request->validated();
-
-            if ($request->hasFile('image')) {
-
-                $data['image'] = UploadHelper::uploadImage(
-                    $request->file('image')
-                );
-
-            }
-
-            $menu = $this->repository->createMenu($data);
-
-            return ResponseHelpers::success($menu,'Menu berhasil dibuat');
-
-        } catch (\Exception $e) {
-
-            return ResponseHelpers::error(null,$e->getMessage());
-
-        }
+    if ($request->hasFile('image')) {
+        $imagePath = UploadHelper::uploadImage($request->file('image'));
+        $data['image'] = $imagePath;
     }
 
-    public function update(MenuRequest $request, $id)
+    $menu = $this->repository->createMenu($data);
+    $menu->image_url = $this->imageUrl($menu->image);
+
+    return ResponseHelpers::success($menu, 'Berhasil Membuat Menu');
+}
+
+    public function update(Request $request, $id)
     {
-        try {
-
-            $data = $request->validated();
-
-            if ($request->hasFile('image')) {
-
-                $data['image'] = UploadHelper::uploadImage(
-                    $request->file('image')
-                );
-
-            }
-
-            $menu = $this->repository->updateMenu($id,$data);
-
-            return ResponseHelpers::success($menu,'Menu berhasil diupdate');
-
-        } catch (\Exception $e) {
-
-            return ResponseHelpers::error(null,$e->getMessage());
-
+        $data = $request->all();
+        $updated = $this->repository->updateMenu($id, $data);
+        if ($updated) {
+            $updated->image_url = $this->imageUrl($updated->image);
         }
+        return ResponseHelpers::success($updated, 'Berhasil Mengupdate Menu');
     }
 
     public function destroy($id)
     {
-        try {
+        return ResponseHelpers::success(
+            $this->repository->deleteMenu($id),
+            'Berhasil Menghapus Menu'
+        );
+    }
 
-            $this->repository->deleteMenu($id);
-
-            return ResponseHelpers::success(null,'Menu berhasil dihapus');
-
-        } catch (\Exception $e) {
-
-            return ResponseHelpers::error(null,$e->getMessage());
-
+    public function uploadImage(Request $request)
+    {
+        $file = $request->file('image');
+        if ($file) {
+            $path = $this->repository->UploadImage($file);
+            return response()->json(['path' => $path]);
         }
+        return ResponseHelpers::error(null, 'No file uploaded', 400);
     }
 }
