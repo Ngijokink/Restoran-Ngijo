@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers\Api;
+
 use App\Helpers\ResponseHelpers;
 use Illuminate\Http\Request;
 use App\Interfaces\MenusInterface;
 use App\Http\Controllers\Controller;
 use App\Helpers\UploadHelper;
+use App\Http\Requests\MenuRequest;
 
 class MenuController extends Controller
 {
@@ -15,10 +17,6 @@ class MenuController extends Controller
         $this->repository = $repository;
     }
 
-    /**
-     * Buat image_url pakai APP_URL dari config,
-     * bukan dari request host — supaya ngrok URL yang keluar.
-     */
     private function imageUrl(?string $imagePath): ?string
     {
         if (!$imagePath) return null;
@@ -45,29 +43,45 @@ class MenuController extends Controller
         return ResponseHelpers::success($menu, 'Data Menu');
     }
 
-    public function store(Request $request)
-{
-    $data = $request->all();
+    public function store(MenuRequest $request)
+    {
+        $data = $request->validated();
 
-    if ($request->hasFile('image')) {
-        $imagePath = UploadHelper::uploadImage($request->file('image'));
-        $data['image'] = $imagePath;
+        try {
+            if ($request->hasFile('image')) {
+                $data['image'] = UploadHelper::uploadImage($request->file('image')); // ✅ Hapus duplikat, taruh di dalam try
+            }
+
+            $menu = $this->repository->createMenu($data);
+            $menu->image_url = $this->imageUrl($menu->image);
+
+            return ResponseHelpers::success($menu, 'Berhasil Membuat Menu');
+
+        } catch (\Exception $e) {
+            return ResponseHelpers::error(null, 'Gagal Membuat Menu: ' . $e->getMessage());
+        }
+        // ✅ Dead code dihapus
     }
 
-    $menu = $this->repository->createMenu($data);
-    $menu->image_url = $this->imageUrl($menu->image);
-
-    return ResponseHelpers::success($menu, 'Berhasil Membuat Menu');
-}
-
-    public function update(Request $request, $id)
+    public function update(MenuRequest $request, $id) // ✅ Ganti Request → MenuRequest
     {
-        $data = $request->all();
-        $updated = $this->repository->updateMenu($id, $data);
-        if ($updated) {
-            $updated->image_url = $this->imageUrl($updated->image);
+        $data = $request->validated(); // ✅ Ganti all() → validated()
+
+        try {
+            if ($request->hasFile('image')) {
+                $data['image'] = UploadHelper::uploadImage($request->file('image')); // ✅ Tambah handle image
+            }
+
+            $updated = $this->repository->updateMenu($id, $data);
+            if ($updated) {
+                $updated->image_url = $this->imageUrl($updated->image);
+            }
+
+            return ResponseHelpers::success($updated, 'Berhasil Mengupdate Menu');
+
+        } catch (\Exception $e) {
+            return ResponseHelpers::error(null, 'Gagal Mengupdate Menu: ' . $e->getMessage());
         }
-        return ResponseHelpers::success($updated, 'Berhasil Mengupdate Menu');
     }
 
     public function destroy($id)
