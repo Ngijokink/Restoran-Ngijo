@@ -19,8 +19,6 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\AuthRepo::class);
         $this->app->bind(\App\Interfaces\OrderInterface::class,
             \App\Repositories\OrderRepo::class);
-        $this->app->bind(\App\Interfaces\TransactionInterface::class,
-            \App\Repositories\TransactionRepo::class);
         $this->app->bind(\App\Interfaces\ReportInterface::class,
             \App\Repositories\ReportRepo::class);
         $this->app->bind(\App\Interfaces\PaymentInterface::class,

@@ -20,6 +20,7 @@ Route::middleware(['auth:sanctum', 'role:superadmin'])->group(function () {
     Route::post('/register/admin', [AuthController::class, 'registerAdmin']);
 });
 Route::middleware(['auth:sanctum', 'role:manager'])->group( function (){
+    Route::post('/report', [ReportController::class, 'store']);
     Route::get('/report/export-pdf/{date}', [ReportController::class, 'exportPdf']); // harus sebelum resource
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/categories', [CatController::class, 'index']);

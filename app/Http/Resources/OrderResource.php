@@ -28,7 +28,7 @@ class OrderResource extends JsonResource
             
             // Relasi ke tabel 'transaksi' dan 'order_items'
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
-            'transaction' => new TransactionResource($this->whenLoaded('transaksi')),
+            'Payment' => new PaymentResource($this->whenLoaded('transaksi')),
             
             'dibuat_pada' => $this->created_at 
     ? Carbon::parse($this->created_at)
