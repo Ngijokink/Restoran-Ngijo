@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\ReportInterface;
 use App\Models\Orders;
+use App\Models\Payment;
 use App\Models\Transaction;
 
 class ReportRepo implements ReportInterface{
@@ -33,11 +34,11 @@ class ReportRepo implements ReportInterface{
         ];
 
         // transaction stats
-        $transactions = Transaction::whereDate('created_at', $date)->get();
-        $totalTransactions = $transactions->count();
-        $totalSuccessAmount = $transactions->whereIn('status', ['SUCCESS', 'success', 'paid'])->sum('total');
+        $payments = Payment::whereDate('created_at', $date)->get();
+        $totalTransactions = $payments->count();
+        $totalSuccessAmount = $payments->whereIn('status', ['SUCCESS', 'success', 'paid'])->sum('total');
         // ignore transactions without a payment method
-        $totalPerMethod = $transactions
+        $totalPerMethod = $payments
             ->whereNotNull('method')
             ->filter(fn($t) => trim($t->method) !== '')
             ->groupBy('method')
@@ -67,11 +68,11 @@ class ReportRepo implements ReportInterface{
 
     public function getDailyTransactionStats(string $date)
     {
-        $transactions = Transaction::whereDate('created_at', $date)->get();
-        return $transactions->groupBy('menu_id')->map(function ($items) {
+        $payments = Payment::whereDate('created_at', $date)->get();
+        return $payments->groupBy('menu_id')->map(function ($items) {
             return [
                 'menu_name' => $items->first()->menu->name,
-                'total_transaction' => $items->sum('amount'),
+                'total_transaction' => $items->sum('total'),
             ];
         })->values();
     }

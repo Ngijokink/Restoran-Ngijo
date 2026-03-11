@@ -4,7 +4,7 @@ namespace App\Services;
 
 
 use App\Models\Menu;
-use App\Models\Item;
+use App\Models\CartItem;
 use App\Repositories\OrderRepo;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -37,12 +37,12 @@ class OrderService
                 $subtotal = $menu->price * $item['quantity'];
                 $total += $subtotal;
 
-                Item::create([
-                    'order_id' => $order->id,
-                    'menu_id' => $item['menu_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $menu->price,
-                    'subtotal' => $subtotal
+                CartItem::create([
+                      'id_cart'=> $order->id_cart,
+            'id_menu'=> $item['id_menu'],
+            'qty'=> $item['quantity'],
+            'price'=> $menu->price,
+        'subtotal'=> $subtotal
                 ]);
 
                 $menu->decrement('stock', $item['quantity']);
