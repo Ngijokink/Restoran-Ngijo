@@ -13,11 +13,9 @@ use App\Http\Controllers\Api\PaymentController;
 Route::post('/login',    [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::resource('/menus',MenuController::class);
-Route::post('/setup/superadmin', [AuthController::class, 'registerSuperAdmin']);
-
 Route::middleware(['auth:sanctum', 'role:superadmin'])->group(function () {
     Route::post('/register/admin', [AuthController::class, 'registerAdmin']);
+    Route::post('/setup/superadmin', [AuthController::class, 'registerSuperAdmin']);
 });
 Route::middleware(['auth:sanctum', 'role:manager'])->group( function (){
     Route::post('/report', [ReportController::class, 'store']);
@@ -25,8 +23,7 @@ Route::middleware(['auth:sanctum', 'role:manager'])->group( function (){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/categories', [CatController::class, 'index']);
     Route::post('/categories', [CatController::class, 'store']);
-    Route::get('/menus', [MenuController::class, 'index']);
-    Route::post('/menus', [MenuController::class, 'store']);
+    Route::resource('/menus', MenuController::class);
     Route::resource('/report', ReportController::class);
 });
 

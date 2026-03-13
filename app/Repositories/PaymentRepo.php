@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories; 
 use App\Models\Payment;
-use App\Interfaces\paymentInterface;  
+use App\Interfaces\PaymentInterface;
 
 
 class PaymentRepo implements PaymentInterface
