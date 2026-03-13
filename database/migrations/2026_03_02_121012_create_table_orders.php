@@ -16,12 +16,9 @@
         $table->id('id_order');
 
         $table->unsignedBigInteger('user_id');
-
+        $table->unsignedBigInteger('table_id');
         $table->string('order_code');
-
-
-        $table->string('status')->default('pending');
-
+        $table->enum('status',['pending','confirmed','cooking','done'])->default('pending');
         $table->integer('total_price')->default(0);
 
 
@@ -32,6 +29,7 @@
           ->references('id_user')
           ->on('users')
           ->onDelete('cascade');
+       
 });
         }
 

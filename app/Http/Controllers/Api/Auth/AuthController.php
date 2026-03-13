@@ -68,13 +68,11 @@ class AuthController extends Controller
 {
     try {
         $request->validated();
-
         $result = $this->handler->login($request);
 
         if (!$result) {
             return ResponseHelpers::error(null, 'Email atau password salah.', 401);
         }
-
         $cacheKey = "users_" . $result['id_user'];
 
         $user = Cache::remember($cacheKey, 60, function () use ($result) {
