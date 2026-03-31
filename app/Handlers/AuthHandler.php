@@ -57,7 +57,6 @@ class AuthHandler
     public function registerSuperAdmin($request)
     {
         $exists = $this->model->where('role', 'superadmin')->exists();
-
         if ($exists) {
             throw new \Exception('Superadmin sudah ada. Hanya boleh ada 1 superadmin di sistem.');
         }
@@ -115,7 +114,7 @@ class AuthHandler
             'admin'      => 3,
             'manager'    => 2,
             'staff'      => 1,
-            'pelanggan'       => 0,
+            'pelanggan'  => 0,
         ];
     }
 

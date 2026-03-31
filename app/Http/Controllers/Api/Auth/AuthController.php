@@ -60,7 +60,7 @@ class AuthController extends Controller
 
             return ResponseHelpers::success($resource, 'Akun superadmin berhasil dibuat.');
         } catch (\Throwable $e) {
-            return ResponseHelpers::error(null, $e->getMessage(), 422);
+            return ResponseHelpers::error(null, $e->getMessage(), 403);
         }
     }
 
