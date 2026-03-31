@@ -11,12 +11,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(\App\Interfaces\CrudCatInterface::class,
-         \App\Repositories\CrudCatRepo::class);
-        $this->app->bind(\App\Interfaces\CrudMenusInterface::class,
-         \App\Repositories\CrudMenuRepo::class);
+        $this->app->bind(\App\Interfaces\CatInterface::class,
+            \App\Repositories\CatRepo::class);
+        $this->app->bind(\App\Interfaces\MenusInterface::class,
+            \App\Repositories\MenuRepo::class);
         $this->app->bind(\App\Interfaces\AuthInterface::class,
-         \App\Repositories\AuthRepo::class);
+            \App\Repositories\AuthRepo::class);
+        $this->app->bind(\App\Interfaces\OrderInterface::class,
+            \App\Repositories\OrderRepo::class);
+        $this->app->bind(\App\Interfaces\ReportInterface::class,
+            \App\Repositories\ReportRepo::class);
+        $this->app->bind(\App\Interfaces\PaymentInterface::class,
+            \App\Repositories\PaymentRepo::class);
+        $this->app->bind(\App\Interfaces\OrderItemInterface::class,
+            \App\Repositories\OrderItemRepo::class);
+            $this->app->bind(\App\Interfaces\CartInterface::class,
+            \App\Repositories\CartRepo::class);
     }
 
     /**

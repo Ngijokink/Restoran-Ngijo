@@ -27,4 +27,25 @@ class RegisRequest extends FormRequest
             'password' => 'required|min:8'
         ];
     }
+
+    public function messages(): array  
+    {
+        return [
+            'name.required'=> 'silahkan masukkan nama anda',
+            'name.string'=> 'nama harus berupa huruf',
+            'name.max'=> 'maximal karakter nama 255',
+
+
+            'email.required'=> 'silahkan masukkan email',
+            'email.email'=> 'masukkan format email yang valid',
+            'email.unique'=> 'email sudah dipakai',
+
+            'password.required'=> 'silahkan masukkan password',
+            'password.min'=> 'minimal 8 karakter',
+
+            
+        
+
+        ];
+    }
 }

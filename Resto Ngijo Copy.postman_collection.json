@@ -1,0 +1,890 @@
+{
+  "info": {
+    "_postman_id": "c1a2b3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Resto Ngijo - By Role",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+
+    {
+      "name": "🔓 Public (No Auth)",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Budi Santoso\",\n    \"email\": \"budi@gmail.com\",\n    \"password\": \"12345678\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}api/register",
+              "host": ["{{base_url}}api"],
+              "path": ["register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res  = pm.response.json();",
+                  "const data = res.data;",
+                  "if (!data) { console.log('No data field'); return; }",
+                  "const tokenMap = {",
+                  "    superadmin_token : 'token_superadmin',",
+                  "    admin_token      : 'token_admin',",
+                  "    manager_token    : 'token_manager',",
+                  "    staff_token      : 'token_staff',",
+                  "    user_token       : 'token_user',",
+                  "};",
+                  "for (const [key, envVar] of Object.entries(tokenMap)) {",
+                  "    if (data[key]) {",
+                  "        pm.environment.set(envVar, data[key]);",
+                  "        console.log(`✅ ${envVar} berhasil di-set`);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"user@gmail.com\",\n    \"password\": \"12345678\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}api/login",
+              "host": ["{{base_url}}api"],
+              "path": ["login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Setup Superadmin (Sekali Pakai)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Super Admin\",\n    \"email\": \"superadmin@gmail.com\",\n    \"password\": \"12345678\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}api/setup/superadmin",
+              "host": ["{{base_url}}api"],
+              "path": ["setup", "superadmin"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Meja - Get All",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}api/meja",
+              "host": ["{{base_url}}api"],
+              "path": ["meja"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Meja - Get Detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}api/meja/1",
+              "host": ["{{base_url}}api"],
+              "path": ["meja", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "👑 Superadmin",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Login Superadmin",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json(); const data = res.data;",
+                      "if (data && data.superadmin_token) { pm.environment.set('token_superadmin', data.superadmin_token); console.log('✅ token_superadmin di-set'); }"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"superadmin@gmail.com\",\n    \"password\": \"12345678\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}api/login",
+                  "host": ["{{base_url}}api"],
+                  "path": ["login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout Superadmin",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_superadmin}}", "type": "string" }] },
+                "method": "POST",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/logout", "host": ["{{base_url}}api"], "path": ["logout"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Register Admin (oleh Superadmin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_superadmin}}", "type": "string" }] },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Admin Baru\",\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"12345678\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}api/register/admin", "host": ["{{base_url}}api"], "path": ["register", "admin"] }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "🛡️ Admin",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Login Admin",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json(); const data = res.data;",
+                      "if (data && data.admin_token) { pm.environment.set('token_admin', data.admin_token); console.log('✅ token_admin di-set'); }"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"12345678\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/login", "host": ["{{base_url}}api"], "path": ["login"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout Admin",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_admin}}", "type": "string" }] },
+                "method": "POST",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/logout", "host": ["{{base_url}}api"], "path": ["logout"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "Get All Users",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_admin}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/users", "host": ["{{base_url}}api"], "path": ["users"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Role User",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_admin}}", "type": "string" }] },
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"role\": \"staff\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/users/5/role", "host": ["{{base_url}}api"], "path": ["users", "5", "role"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Meja",
+          "item": [
+            {
+              "name": "Create Meja",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_admin}}", "type": "string" }] },
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nomor_meja\": \"B1\",\n    \"kapasitas\": 4,\n    \"status\": \"tersedia\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/meja", "host": ["{{base_url}}api"], "path": ["meja"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Meja",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_admin}}", "type": "string" }] },
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nomor_meja\": \"B1\",\n    \"kapasitas\": 6,\n    \"status\": \"tersedia\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/meja/1", "host": ["{{base_url}}api"], "path": ["meja", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Meja",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_admin}}", "type": "string" }] },
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/meja/1", "host": ["{{base_url}}api"], "path": ["meja", "1"] }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "📊 Manager",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Login Manager",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json(); const data = res.data;",
+                      "if (data && data.manager_token) { pm.environment.set('token_manager', data.manager_token); console.log('✅ token_manager di-set'); }"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"manager@gmail.com\",\n    \"password\": \"12345678\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/login", "host": ["{{base_url}}api"], "path": ["login"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout Manager",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "POST",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/logout", "host": ["{{base_url}}api"], "path": ["logout"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Categories",
+          "item": [
+            {
+              "name": "Get All Categories",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/categories", "host": ["{{base_url}}api"], "path": ["categories"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Category",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"category\": \"Snack\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/categories", "host": ["{{base_url}}api"], "path": ["categories"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Menu",
+          "item": [
+            {
+              "name": "Get All Menus",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/menus", "host": ["{{base_url}}api"], "path": ["menus"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Menu by ID",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/menus/1", "host": ["{{base_url}}api"], "path": ["menus", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Menu",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "POST",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "category_id", "value": "1", "type": "text" },
+                    { "key": "menu", "value": "Onde Onde", "type": "text" },
+                    { "key": "price", "value": "3000", "type": "text" },
+                    { "key": "stock", "value": "20", "type": "text" },
+                    { "key": "is_available", "value": "1", "type": "text" },
+                    { "key": "image", "type": "file", "src": "" }
+                  ]
+                },
+                "url": { "raw": "{{base_url}}api/menus", "host": ["{{base_url}}api"], "path": ["menus"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Menu",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"category_id\": 1,\n    \"menu\": \"Onde Onde Wijen\",\n    \"price\": 4000,\n    \"stock\": 30,\n    \"is_available\": 1\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/menus/1", "host": ["{{base_url}}api"], "path": ["menus", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Menu",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/menus/1", "host": ["{{base_url}}api"], "path": ["menus", "1"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Meja",
+          "item": [
+            {
+              "name": "Create Meja",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nomor_meja\": \"A1\",\n    \"kapasitas\": 4,\n    \"status\": \"tersedia\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/meja", "host": ["{{base_url}}api"], "path": ["meja"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Meja",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nomor_meja\": \"A1\",\n    \"kapasitas\": 6,\n    \"status\": \"tersedia\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/meja/1", "host": ["{{base_url}}api"], "path": ["meja", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Meja",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/meja/1", "host": ["{{base_url}}api"], "path": ["meja", "1"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Report",
+          "item": [
+            {
+              "name": "Get All Reports",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/report", "host": ["{{base_url}}api"], "path": ["report"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Report by ID",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/report/1", "host": ["{{base_url}}api"], "path": ["report", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Report",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"date\": \"2025-03-13\",\n    \"total_income\": 500000,\n    \"notes\": \"Laporan harian\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/report", "host": ["{{base_url}}api"], "path": ["report"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Report",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"date\": \"2025-03-13\",\n    \"total_income\": 600000,\n    \"notes\": \"Update laporan harian\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/report/1", "host": ["{{base_url}}api"], "path": ["report", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Report",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/report/1", "host": ["{{base_url}}api"], "path": ["report", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Export Report PDF",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_manager}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/pdf", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/report/export-pdf/2025-03-13", "host": ["{{base_url}}api"], "path": ["report", "export-pdf", "2025-03-13"] }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "🛒 Pelanggan",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Register Pelanggan",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Budi Santoso\",\n    \"email\": \"pelanggan@gmail.com\",\n    \"password\": \"12345678\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/register", "host": ["{{base_url}}api"], "path": ["register"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Login Pelanggan",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json(); const data = res.data;",
+                      "if (data && data.user_token) { pm.environment.set('token_user', data.user_token); console.log('✅ token_user di-set'); }"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"pelanggan@gmail.com\",\n    \"password\": \"12345678\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/login", "host": ["{{base_url}}api"], "path": ["login"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout Pelanggan",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "POST",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/logout", "host": ["{{base_url}}api"], "path": ["logout"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Meja",
+          "item": [
+            {
+              "name": "Lihat Semua Meja",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/meja", "host": ["{{base_url}}api"], "path": ["meja"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Lihat Detail Meja",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/meja/1", "host": ["{{base_url}}api"], "path": ["meja", "1"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Cart",
+          "item": [
+            {
+              "name": "Lihat Cart",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/cart/1", "host": ["{{base_url}}api"], "path": ["cart", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Tambah ke Cart",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"user_id\": 1,\n    \"menu_id\": 1,\n    \"qty\": 2\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/cart/add", "host": ["{{base_url}}api"], "path": ["cart", "add"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Cart Item",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"user_id\": 1,\n    \"menu_id\": 1,\n    \"qty\": 5\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/cart/update/1", "host": ["{{base_url}}api"], "path": ["cart", "update", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Hapus Cart Item",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/cart/remove/1", "host": ["{{base_url}}api"], "path": ["cart", "remove", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Checkout Cart",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "POST",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/cart/checkout/1", "host": ["{{base_url}}api"], "path": ["cart", "checkout", "1"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Order",
+          "item": [
+            {
+              "name": "Get All Orders",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/orders", "host": ["{{base_url}}api"], "path": ["orders"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Order by ID",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/orders/1", "host": ["{{base_url}}api"], "path": ["orders", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Order",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"menu_id\": 1,\n    \"user_id\": 1,\n    \"total_price\": 20000\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/orders", "host": ["{{base_url}}api"], "path": ["orders"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Order",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "PUT",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"menu_id\": 2,\n    \"user_id\": 1,\n    \"total_price\": 35000\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/orders/1", "host": ["{{base_url}}api"], "path": ["orders", "1"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Order",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+                "url": { "raw": "{{base_url}}api/orders/1", "host": ["{{base_url}}api"], "path": ["orders", "1"] }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Payment",
+          "item": [
+            {
+              "name": "Bayar (Payment)",
+              "request": {
+                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token_user}}", "type": "string" }] },
+                "method": "POST",
+                "header": [
+                  { "key": "Accept", "value": "application/json", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"id_order\": 1,\n    \"amount\": 25000,\n    \"method\": \"cash\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": { "raw": "{{base_url}}api/payments", "host": ["{{base_url}}api"], "path": ["payments"] }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/",
+      "type": "string"
+    }
+  ]
+}

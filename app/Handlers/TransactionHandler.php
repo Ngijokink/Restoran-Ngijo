@@ -2,14 +2,14 @@
 
 namespace App\Handlers;
 
-use App\Repositories\CrudTransaction;
+use App\Repositories\TransactionRepo;
 use Illuminate\Http\Request;
 
 class TransactionHandler
 {
     protected $transactionRepo;
 
-    public function __construct(CrudTransaction $transactionRepo)
+    public function __construct(TransactionRepo $transactionRepo)
     {
         $this->transactionRepo = $transactionRepo;
     }

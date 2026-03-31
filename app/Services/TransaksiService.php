@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Order;
+use App\Models\Orders;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -11,7 +11,7 @@ class TransaksiService
     public function createTransaction($orderId, $total, $method)
     {
         return DB::transaction(function () use ($orderId, $total, $method) {
-            $order = Order::findOrFail($orderId);
+            $order = Orders::findOrFail($orderId);
             if ($order->status !== 'pending') {
                 throw new Exception("Order tidak dalam status pending");
             }
