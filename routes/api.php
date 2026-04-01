@@ -95,4 +95,7 @@ Route::middleware(['auth:sanctum', 'role:pelanggan'])->group(function () {
     Route::post('/orders',        [OrderController::class, 'store']);
     Route::put('/orders/{id}',    [OrderController::class, 'update']);
     Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
+
+    Route::get('/menus',          [MenuController::class, 'index']);
+    Route::get('/categories',    [CatController::class, 'index']);
 });

@@ -21,10 +21,13 @@ class Menu extends Model
         'image',
     ];
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'category_id', 'id_category');
-    }
+    // app/Models/Menu.php
+
+public function category()
+{
+    // Pastikan foreign key dan owner key-nya sesuai migration kamu
+    return $this->belongsTo(Category::class, 'category_id', 'id_category');
+}
     public function cartItems()
     {
         return $this->hasMany(CartItem::class, 'id_menu', 'id_menu');

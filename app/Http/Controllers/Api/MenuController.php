@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\ResponseHelpers;
+use App\Http\Resources\MenuResource;
 use Illuminate\Http\Request;
 use App\Interfaces\MenusInterface;
 use App\Http\Controllers\Controller;
@@ -25,23 +26,25 @@ class MenuController extends Controller
     }
 
     public function index()
-    {
-        $menus = $this->repository->allMenu();
+{
+    $menus = $this->repository->allMenu();
+    // $resource = MenuResource::collection($menus);
+    
+    // Gunakan Resource Collection agar relasi 'kategori' ikut terformat
+    return ResponseHelpers::success($menus, 'Data Menu');
+}
 
-        foreach ($menus as $menu) {
-            $menu->image_url = $this->imageUrl($menu->image);
-        }
-
-        return ResponseHelpers::success($menus, 'Data Menu');
+public function show($id)
+{
+    $menu = $this->repository->findMenu($id);
+    
+    if (!$menu) {
+        return ResponseHelpers::error(null, 'Menu tidak ditemukan', 404);
     }
 
-    public function show($id)
-    {
-        $menu = $this->repository->findMenu($id);
-        $menu->image_url = $this->imageUrl($menu->image);
-
-        return ResponseHelpers::success($menu, 'Data Menu');
-    }
+    // Bungkus dengan MenuResource
+    return ResponseHelpers::success(new MenuResource($menu), 'Data Menu');
+}
 
     public function store(MenuRequest $request)
     {
@@ -54,8 +57,9 @@ class MenuController extends Controller
 
             $menu = $this->repository->createMenu($data);
             $menu->image_url = $this->imageUrl($menu->image);
+            $resource = new MenuResource($menu);
 
-            return ResponseHelpers::success($menu, 'Berhasil Membuat Menu');
+            return ResponseHelpers::success($resource, 'Berhasil Membuat Menu');
 
         } catch (\Exception $e) {
             return ResponseHelpers::error(null, 'Gagal Membuat Menu: ' . $e->getMessage());

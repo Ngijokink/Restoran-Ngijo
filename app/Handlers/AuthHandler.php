@@ -62,11 +62,11 @@ class AuthHandler
     }
 
     $tokenName = match($user->role) {
-        'superadmin' => 'superadmin_token',
-        'admin'      => 'admin_token',
-        'manager'    => 'manager_token',
-        'staff'      => 'staff_token',
-        default      => 'user_token',
+        'superadmin' => 'token',
+        'admin'      => 'token',
+        'manager'    => 'token',
+        'staff'      => 'token',
+        default      => 'token',
     };
 
     $token = $user->createToken($tokenName)->plainTextToken;
