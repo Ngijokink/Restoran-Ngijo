@@ -922,7 +922,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"superadmin@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}"
+              "raw": "{\r\n    \"email\": \"agus@gmail.com\",\r\n    \"password\": \"agusadmin123\"\r\n}"
             },
             "url": {
               "raw": "{{base_url_restojo}}api/login",
@@ -974,7 +974,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"role\" : \"staff\"\r\n}",
+              "raw": "{\r\n    \"role\" : \"manager\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -982,13 +982,13 @@
               }
             },
             "url": {
-              "raw": "{{base_url_restojo}}api/users/5/role",
+              "raw": "{{base_url_restojo}}api/users/1/role",
               "host": [
                 "{{base_url_restojo}}api"
               ],
               "path": [
                 "users",
-                "5",
+                "1",
                 "role"
               ]
             }
@@ -997,6 +997,49 @@
         },
         {
           "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Postman → Tests tab (di request Login)\r",
+                  "\r",
+                  "const res  = pm.response.json();\r",
+                  "const data = res.data;\r",
+                  "\r",
+                  "if (!data) {\r",
+                  "    console.log(\"Response tidak punya field data\");\r",
+                  "    return;\r",
+                  "}\r",
+                  "\r",
+                  "const tokenMap = {\r",
+                  "    superadmin_token : \"token_superadmin\",\r",
+                  "    admin_token      : \"token_admin\",\r",
+                  "    manager_token    : \"token_manager\",\r",
+                  "    staff_token      : \"token_staff\",\r",
+                  "    user_token       : \"token_user\",\r",
+                  "};\r",
+                  "\r",
+                  "let tokenSet = false;\r",
+                  "\r",
+                  "for (const [key, envVar] of Object.entries(tokenMap)) {\r",
+                  "    if (data[key]) {\r",
+                  "        pm.environment.set(envVar, data[key]);\r",
+                  "        console.log(`✅ ${envVar} berhasil di-set`);\r",
+                  "        tokenSet = true;\r",
+                  "    }\r",
+                  "}\r",
+                  "\r",
+                  "if (!tokenSet) {\r",
+                  "    console.warn(\"⚠️ Tidak ada token yang ditemukan di response\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "protocolProfileBehavior": {
             "disabledSystemHeaders": {
               "accept": true
