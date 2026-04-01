@@ -49,27 +49,6 @@ class AuthHandler
         ]);
     }
 
-    /**
-     * Register superadmin.
-     * Hanya boleh ada 1 superadmin di seluruh sistem.
-     * Sebaiknya dipanggil sekali saja (seeder/setup awal).
-     */
-    public function registerSuperAdmin($request)
-    {
-        $exists = $this->model->where('role', 'superadmin')->exists();
-
-        if ($exists) {
-            throw new \Exception('Superadmin sudah ada. Hanya boleh ada 1 superadmin di sistem.');
-        }
-
-        return $this->repo->create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => bcrypt($request->password),
-            'role'     => 'superadmin',
-        ]);
-    }
-
     // -------------------------------------------------------------------------
     // LOGIN / LOGOUT
     // -------------------------------------------------------------------------
@@ -115,7 +94,7 @@ class AuthHandler
             'admin'      => 3,
             'manager'    => 2,
             'staff'      => 1,
-            'pelanggan'       => 0,
+            'pelanggan'  => 0,
         ];
     }
 
