@@ -15,7 +15,6 @@ use App\Http\Controllers\Api\PaymentController;
 // ==========================================
 Route::post('/login',             [AuthController::class, 'login']);
 Route::post('/register',          [AuthController::class, 'register']);
-Route::post('/setup/superadmin',  [AuthController::class, 'registerSuperAdmin']);
 
 // Meja - GET public (semua bisa lihat tanpa login)
 Route::get('/meja',       [MejaController::class, 'index']);

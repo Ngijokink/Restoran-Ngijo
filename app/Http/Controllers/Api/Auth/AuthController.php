@@ -51,19 +51,6 @@ class AuthController extends Controller
         }
     }
 
-    public function registerSuperAdmin(RegisRequest $request)
-    {
-        try {
-            $request->validated();
-            $admin    = $this->handler->registerSuperAdmin($request);
-            $resource = new AdminResource($admin);
-
-            return ResponseHelpers::success($resource, 'Akun superadmin berhasil dibuat.');
-        } catch (\Throwable $e) {
-            return ResponseHelpers::error(null, $e->getMessage(), 403);
-        }
-    }
-
     public function login(LoginRequest $request)
 {
     try {
