@@ -1,12 +1,20 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import Dashboard from "./Pages/Dashboard";
 import Login from "./Pages/Login";
-import Dashboard from "./Pages/Dashboard"; 
-import axios from "./Service/Axios";
+import ProtectedRoute from "./ProtectedRoute/Protected";
+
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/Dashboard" element={<Dashboard />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

@@ -388,7 +388,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await api.post("/login", { email, password });
+      const res = await api.post("/login", { email: email.trim(), password });
 
       if (res.status === 204 || !res.data) {
         setError("Server tidak mengembalikan data. Hubungi admin.");
@@ -396,10 +396,10 @@ const Login = () => {
       }
 
       localStorage.setItem("token", res.data.token);
-      navigate("/Dashboard");
+      navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      setError("Email atau password salah. Coba maneh, Mas/Mbak.");
+      setError(err?.response?.data?.message || "Email atau password salah. Coba maneh, Mas/Mbak.");
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../Service/Axios";
 
 const batikPattern = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='2' fill='%2322543d' opacity='0.15'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%2322543d' opacity='0.15'/%3E%3Ccircle cx='60' cy='0' r='2' fill='%2322543d' opacity='0.15'/%3E%3Ccircle cx='0' cy='60' r='2' fill='%2322543d' opacity='0.15'/%3E%3Ccircle cx='60' cy='60' r='2' fill='%2322543d' opacity='0.15'/%3E%3Cpath d='M15 30 Q30 15 45 30 Q30 45 15 30Z' fill='none' stroke='%2322543d' stroke-width='0.8' opacity='0.1'/%3E%3C/svg%3E")`;
@@ -33,6 +34,42 @@ const styles = `
     position: relative;
     overflow-x: hidden;
   }
+
+  .topbar {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 18px 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .welcome-chip {
+    background: rgba(254, 250, 224, 0.9);
+    border: 1px solid var(--hijau-terang);
+    color: var(--hijau-tua);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+
+  .logout-btn {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+  }
+
+  .logout-btn:hover {
+    background: rgba(255,255,255,0.12);
+  }
+
 
   /* HEADER */
   .ngijo-header {
@@ -173,6 +210,38 @@ const styles = `
     max-width: 900px;
     margin: 0 auto;
     padding: 32px 16px 60px;
+  }
+
+
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid rgba(82, 183, 136, 0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 14px rgba(26,61,43,0.08);
+  }
+
+  .stat-label {
+    color: var(--hijau-sedang);
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    color: var(--hijau-tua);
+    font-size: 1.55rem;
+    margin-top: 6px;
+    line-height: 1;
   }
 
   /* SECTION TITLE */
@@ -459,6 +528,7 @@ const Menu = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [kategoriAktif, setKategoriAktif] = useState("Semua");
+  const navigate = useNavigate();
 
   useEffect(() => {
     api
@@ -487,12 +557,37 @@ const Menu = () => {
     return cocokKategori && cocokSearch;
   });
 
+  const totalStok = useMemo(
+    () => filtered.reduce((acc, item) => acc + Number(item.stock || 0), 0),
+    [filtered],
+  );
+
+  const stokHabis = useMemo(
+    () => filtered.filter((item) => Number(item.stock) === 0).length,
+    [filtered],
+  );
+
+  const hargaRataRata = useMemo(() => {
+    if (!filtered.length) return 0;
+    const totalHarga = filtered.reduce((acc, item) => acc + Number(item.price || 0), 0);
+    return Math.round(totalHarga / filtered.length);
+  }, [filtered]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   return (
     <>
       <style>{styles}</style>
       <div className="ngijo-wrapper">
         {/* HEADER */}
         <header className="ngijo-header">
+          <div className="topbar">
+            <div className="welcome-chip">👋 Sugeng rawuh, Admin Ngijo</div>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          </div>
           <div className="header-banner">
             <div className="ornamen-atas">
               <div className="ornamen-garis" />
@@ -540,6 +635,25 @@ const Menu = () => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
+              </div>
+
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <div className="stat-label">Menu tampil</div>
+                  <div className="stat-value">{filtered.length}</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-label">Total stok</div>
+                  <div className="stat-value">{totalStok}</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-label">Stok habis</div>
+                  <div className="stat-value">{stokHabis}</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-label">Rata-rata harga</div>
+                  <div className="stat-value">{formatRupiah(hargaRataRata)}</div>
+                </div>
               </div>
 
               <p className="info-jumlah">
