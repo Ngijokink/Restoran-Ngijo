@@ -11,7 +11,8 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id_category,
-            'nama_kategori' => $this->category, // Mengambil kolom 'category' di migrationmu
+            'nama_kategori' => $this->category,
+            
         ];
     }
 }

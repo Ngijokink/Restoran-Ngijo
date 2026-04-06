@@ -25,84 +25,120 @@ class MenuController extends Controller
         return "{$base}/storage/{$imagePath}";
     }
 
-    public function index()
-{
-    $menus = $this->repository->allMenu();
-    // $resource = MenuResource::collection($menus);
-    
-    // Gunakan Resource Collection agar relasi 'kategori' ikut terformat
-    return ResponseHelpers::success($menus, 'Data Menu');
-}
+   public function index(Request $request){
+        try {
+            $perPage = $request->query('per_page', 2);
+            $query = $this->repository->allMenu()->paginate($perPage);
+            
+            return ResponseHelpers::success($query, 'Data Berhasil di temukan', 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::error(null, 'Gagal mengambil data menu: ' . $e->getMessage(), 500);
+        }
+   }
 
 public function show($id)
 {
-    $menu = $this->repository->findMenu($id);
-    
-    if (!$menu) {
-        return ResponseHelpers::error(null, 'Menu tidak ditemukan', 404);
-    }
+    try {
+        $menu = $this->repository->findMenu($id);
+        
+        if (!$menu) {
+            return ResponseHelpers::error(null, 'Menu tidak ditemukan', 404);
+        }
 
-    // Bungkus dengan MenuResource
-    return ResponseHelpers::success(new MenuResource($menu), 'Data Menu');
+        return ResponseHelpers::success(new MenuResource($menu), 'Data Menu', 200);
+    } catch (\Exception $e) {
+        return ResponseHelpers::error(null, 'Gagal mengambil detail menu: ' . $e->getMessage(), 500);
+    }
 }
 
     public function store(MenuRequest $request)
     {
-        $data = $request->validated();
-
         try {
+            $data = $request->validated();
+
             if ($request->hasFile('image')) {
-                $data['image'] = UploadHelper::uploadImage($request->file('image')); // ✅ Hapus duplikat, taruh di dalam try
+                $data['image'] = UploadHelper::uploadImage($request->file('image'));
             }
 
             $menu = $this->repository->createMenu($data);
             $menu->image_url = $this->imageUrl($menu->image);
             $resource = new MenuResource($menu);
 
-            return ResponseHelpers::success($resource, 'Berhasil Membuat Menu');
+            return ResponseHelpers::success($resource, 'Berhasil Membuat Menu', 201);
 
         } catch (\Exception $e) {
-            return ResponseHelpers::error(null, 'Gagal Membuat Menu: ' . $e->getMessage());
+            return ResponseHelpers::error(null, 'Gagal Membuat Menu: ' . $e->getMessage(), 500);
         }
-        // ✅ Dead code dihapus
     }
 
-    public function update(MenuRequest $request, $id) // ✅ Ganti Request → MenuRequest
+    public function update(MenuRequest $request, $id)
     {
-        $data = $request->validated(); // ✅ Ganti all() → validated()
-
         try {
+            $data = $request->validated();
+
             if ($request->hasFile('image')) {
-                $data['image'] = UploadHelper::uploadImage($request->file('image')); // ✅ Tambah handle image
+                $data['image'] = UploadHelper::uploadImage($request->file('image'));
             }
 
             $updated = $this->repository->updateMenu($id, $data);
-            if ($updated) {
-                $updated->image_url = $this->imageUrl($updated->image);
+            if (!$updated) {
+                return ResponseHelpers::error(null, 'Menu tidak ditemukan', 404);
             }
+            
+            $updated->image_url = $this->imageUrl($updated->image);
+            $resource = new MenuResource($updated);
 
-            return ResponseHelpers::success($updated, 'Berhasil Mengupdate Menu');
+            return ResponseHelpers::success($resource, 'Berhasil Mengupdate Menu', 200);
 
         } catch (\Exception $e) {
-            return ResponseHelpers::error(null, 'Gagal Mengupdate Menu: ' . $e->getMessage());
+            return ResponseHelpers::error(null, 'Gagal Mengupdate Menu: ' . $e->getMessage(), 500);
         }
     }
 
     public function destroy($id)
     {
-        return ResponseHelpers::success(
-            $this->repository->deleteMenu($id),
-            'Berhasil Menghapus Menu'
-        );
+        try {
+            $deleted = $this->repository->deleteMenu($id);
+            if (!$deleted) {
+                return ResponseHelpers::error(null, 'Menu tidak ditemukan', 404);
+            }
+            
+            return ResponseHelpers::success($deleted, 'Berhasil Menghapus Menu', 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::error(null, 'Gagal Menghapus Menu: ' . $e->getMessage(), 500);
+        }
     }
 
     public function uploadImage(Request $request)
     {
-        $file = $request->file('image');
-        if ($file) {
+        try {
+            $file = $request->file('image');
+            if (!$file) {
+                return ResponseHelpers::error(null, 'No file uploaded', 400);
+            }
+            
             $path = $this->repository->UploadImage($file);
-            return response()->json(['path' => $path]);
+            return ResponseHelpers::success(['path' => $path], 'Berhasil upload image', 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::error(null, 'Gagal upload image: ' . $e->getMessage(), 500);
         }
-        return ResponseHelpers::error(null, 'No file uploaded', 400);
+    }
+
+    public function search(Request $request){
+        try {
+            $keyword = $request->query('search');
+            if (!$keyword) {
+                return ResponseHelpers::error(null, 'Parameter search tidak boleh kosong', 400);
+            }
+            
+            $search = $this->repository->search($keyword)->get();
+            return ResponseHelpers::success(
+                MenuResource::collection($search),
+                'Berhasil Menemukan Data',
+                200
+            );
+        } catch (\Throwable $e) {
+            return ResponseHelpers::error(null, $e->getMessage(), 500);
+        }
     }
 }

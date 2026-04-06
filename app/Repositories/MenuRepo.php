@@ -19,7 +19,7 @@ class MenuRepo implements MenusInterface
 public function allMenu()
 {
     // Mengambil semua menu beserta datanya di table_categories
-    return $this->model->with('category')->get();
+    return $this->model->with('category');
 }
 
 public function findMenu($id)
@@ -54,5 +54,13 @@ public function findMenu($id)
     public function UploadImage($file)
     {
         return UploadHelper::uploadImage($file, 'menus');
+    }
+
+    public function search($keyword){
+        return $this->model->with('category')
+                            ->where('name', 'LIKE', "%{$keyword}%")
+                            ->orWhere('price','LIKE',"%{$keyword}%")
+                            ->orWhere('stock','LIKE',"%{$keyword}%")
+                            ->orWhere('is_available','LIKE',"%{$keyword}%");
     }
 }

@@ -15,7 +15,7 @@ class CatRepo implements CatInterface
 
     public function allCategory()
     {
-        return $this->model->all();
+        return $this->model->query();
     }
 
     public function findCategory($id)
@@ -45,5 +45,17 @@ class CatRepo implements CatInterface
             return $record->delete();
         }
         return false;
+    }
+
+    public function search($keyword){
+        return $this->model->where('category','LIKE',"%$keyword%");
+    }
+    public function sorting($sortBy='id_category', $sortDirection='asc'){
+        $allow = ['id_category', 'category'];
+        if(!in_array($sortBy, $allow)){
+            $sortBy = 'id_category';
+        }
+        $sortDirection = strtolower($sortDirection) === 'desc' ? 'desc' : 'asc';
+        return $this->model->orderBy($sortBy, $sortDirection)->get();
     }
 }
