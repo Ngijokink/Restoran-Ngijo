@@ -25,8 +25,9 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\PaymentRepo::class);
         $this->app->bind(\App\Interfaces\OrderItemInterface::class,
             \App\Repositories\OrderItemRepo::class);
-            $this->app->bind(\App\Interfaces\CartInterface::class,
+        $this->app->bind(\App\Interfaces\CartInterface::class,
             \App\Repositories\CartRepo::class);
+
     }
 
     /**

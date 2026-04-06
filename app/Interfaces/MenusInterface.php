@@ -9,4 +9,5 @@ interface MenusInterface
     public function updateMenu($id, array $data);
     public function deleteMenu($id);
     public function uploadImage($file);
+    public function search($keyword);
 }

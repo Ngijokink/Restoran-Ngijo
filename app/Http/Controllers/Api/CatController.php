@@ -7,6 +7,7 @@ use App\Http\Resources\CategoryResource;
 use App\Interfaces\CatInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CatRequest;
+use Illuminate\Http\Request;
 
 class CatController extends Controller
 {
@@ -17,16 +18,13 @@ class CatController extends Controller
         $this->repository = $repository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
+            $perPage = $request->query('per_page', 2);
+            $paginate = $this->repository->allCategory()->paginate($perPage);
 
-            $repo = $this->repository->allCategory();
-
-            return ResponseHelpers::success(
-                CategoryResource::collection($repo),
-                'Data Category'
-            );
+            return ResponseHelpers::success($paginate, 'Data Category');
 
         } catch (\Exception $e) {
 
@@ -107,5 +105,29 @@ class CatController extends Controller
             return ResponseHelpers::error(null, 'Gagal menghapus category : ' . $e->getMessage());
 
         }
+    }
+
+    public function search(Request $request){
+        try{
+            $search = $request->query('search');
+            $perPage = $request->query('per_page', 1);
+            $query = $this->repository->search($search)->paginate($perPage);
+            return ResponseHelpers::success($query,
+                'Data berhasil di temukan', 
+                200
+            );
+        } catch (\Throwable $e){
+            return ResponseHelpers::error(null, $e->getMessage(), 404);
+        }
+    }
+    public function sorting(Request $request){
+        $sort = $request->query('sortBy', 'id_category');
+        $sortDirect = $request->query('sortDirection', 'asc');
+
+        $sorting = $this->repository->sorting($sort, $sortDirect);
+        if($sortDirect === 'desc'){
+            return ResponseHelpers::success($sorting, "Data berhasil diurutkan sesuai $sort dari yang terbesar ke terkecil", 200);
+        }
+        return ResponseHelpers::success($sorting, "Data berhasil diurutkan sesuai $sort dari yang terkecil ke terbesar", 200);
     }
 }
