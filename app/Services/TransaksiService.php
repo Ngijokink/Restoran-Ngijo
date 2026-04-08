@@ -15,7 +15,8 @@ class TransaksiService
             if ($order->status !== 'pending') {
                 throw new Exception("Order tidak dalam status pending");
             }
-            $order->update(['status' => 'paid']);
+            // orders.status doesn't have `paid`; use `confirmed`.
+            $order->update(['status' => 'confirmed']);
             $transaction = Transaction::create([
                 'order_id' => $orderId,
                 'total' => $total,

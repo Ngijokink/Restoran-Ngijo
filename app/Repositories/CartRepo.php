@@ -14,9 +14,19 @@ class CartRepo implements CartInterface
 
     public function getCartById($cartId)
     {
-        return Cart::with('items.menu')
+        $cart = Cart::with('items.menu')
             ->where('id_cart', $cartId)
             ->first();
+
+        if (!$cart) {
+            return null;
+        }
+
+        // Always provide total_price based on current cart item subtotals.
+        $cart->total_price = (float) $cart->items->sum('subtotal');
+        $cart->save();
+
+        return $cart;
     }
 
     public function addToCart(array $data)
@@ -44,16 +54,26 @@ class CartRepo implements CartInterface
             $existingItem->subtotal = $existingItem->qty * $existingItem->price;
             $existingItem->save();
 
+            $cart->total_price = CartItem::where('id_cart', $cart->id_cart)
+                ->sum('subtotal');
+            $cart->save();
+
             return $existingItem;
         }
 
-        return CartItem::create([
+        $item = CartItem::create([
             'id_cart' => $cart->id_cart,
             'id_menu' => $menu->id_menu,
             'qty' => $qty,
             'price' => $price,
             'subtotal' => $subtotal
         ]);
+
+        $cart->total_price = CartItem::where('id_cart', $cart->id_cart)
+            ->sum('subtotal');
+        $cart->save();
+
+        return $item;
     }
 
     public function updateQty($cartItemId, $data)
@@ -67,6 +87,11 @@ class CartRepo implements CartInterface
 
         $item->save();
 
+        $cart = Cart::findOrFail($item->id_cart);
+        $cart->total_price = CartItem::where('id_cart', $item->id_cart)
+            ->sum('subtotal');
+        $cart->save();
+
         return $item;
     }
 
@@ -74,6 +99,11 @@ class CartRepo implements CartInterface
     {
         $item = CartItem::findOrFail($cartItemId);
         $item->delete();
+
+        $cart = Cart::findOrFail($item->id_cart);
+        $cart->total_price = CartItem::where('id_cart', $item->id_cart)
+            ->sum('subtotal');
+        $cart->save();
 
         return true;
     }
@@ -96,6 +126,10 @@ class CartRepo implements CartInterface
             'order_code' => 'ORD-' . rand(10000, 99999),
             
         ]);
+
+        // Link the cart to the created order so payment can update the correct order.
+        $cart->id_order = $order->id_order;
+        $cart->save();
 
        
 

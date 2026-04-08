@@ -14,8 +14,7 @@ class User extends Authenticatable
 
     protected $primaryKey = 'id_user';
 
-    public $incrementing = true;
-    protected $keyType = 'int';
+    public $incrementing = true;    protected $keyType = 'int';
 
     protected $fillable = [
         'name',
@@ -33,4 +32,5 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    
 }
