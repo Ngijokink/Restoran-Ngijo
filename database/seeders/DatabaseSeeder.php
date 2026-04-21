@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use PHPUnit\Metadata\Test;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,6 +15,7 @@ class DatabaseSeeder extends Seeder
         // Daftarkan seeder kamu di sini
         $this->call([
             SuperAdminAccount::class,
+            TestingOnly::class,
             // Kamu bisa menambah seeder lain di sini nanti
         ]);
     }

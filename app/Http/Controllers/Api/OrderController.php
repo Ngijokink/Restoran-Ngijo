@@ -7,6 +7,7 @@ use App\Handlers\OrderHandler;
 use Illuminate\Http\Request;
 use App\Interfaces\OrderInterface;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderRequest;
 use Carbon\Carbon;
 
 class OrderController extends Controller
@@ -50,7 +51,7 @@ class OrderController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(OrderRequest $request)
     {
         try {
 

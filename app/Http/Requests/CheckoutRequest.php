@@ -4,7 +4,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 
-class CartRequest extends FormRequest
+class CheckoutRequest extends FormRequest
 {
     public function authorize()
     {
@@ -15,7 +15,7 @@ class CartRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id_user',
-            'table_id' => 'nullable|exists:table_meja,id_table',
+            'table_id' => 'required|exists:table_meja,id_table',
             'menu_id' => 'required|exists:table_menus,id_menu',
             'qty' => 'required|integer|min:1',
         ];

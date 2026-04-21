@@ -7,27 +7,29 @@ return new class extends Migration
 {
     public function up(): void
     {
-       Schema::create('carts', function (Blueprint $table) {
-    $table->id('id_cart');
+        Schema::create('carts', function (Blueprint $table) {
+            $table->id('id_cart');
+            $table->unsignedBigInteger('id_order')->nullable();
+            $table->unsignedBigInteger('table_id')->nullable(); // ✅ Nullable saat add to cart
+            $table->unsignedBigInteger('user_id');
+            $table->decimal('total_price', 12, 2)->default(0);
+            $table->timestamps();
 
-    $table->unsignedBigInteger('id_order')->nullable();
+            $table->foreign('id_order')
+                  ->references('id_order')
+                  ->on('orders')
+                  ->onDelete('cascade');
 
-    $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')
+                  ->references('id_user')
+                  ->on('users')
+                  ->onDelete('cascade');
 
-    $table->decimal('total_price',12,2)->default(0);
-
-    $table->timestamps();
-
-    $table->foreign('id_order')
-          ->references('id_order')
-          ->on('orders')
-          ->onDelete('cascade');
-
-    $table->foreign('user_id')
-          ->references('id_user')
-          ->on('users')
-          ->onDelete('cascade');
-});
+            $table->foreign('table_id')
+                  ->references('id_table')
+                  ->on('table_meja')
+                  ->onDelete('cascade');
+        });
     }
 
     public function down(): void

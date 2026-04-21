@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Interfaces\CartInterface;
 use App\Http\Requests\CartRequest;
+use App\Http\Requests\CheckoutRequest;
 
 class CartController extends Controller
 {
@@ -79,18 +80,16 @@ class CartController extends Controller
         }
     }
 
-    public function checkout($userId)
+    public function checkout(CheckoutRequest $request, $userId)
     {
         try {
+            $tableId = $request->validated()['table_id'] ?? null;
+            $data = $this->repository->checkout($userId, $tableId);
 
-            $data = $this->repository->checkout($userId);
-
-            return ResponseHelpers::success($data, 'Checkout berhasil');
+            return ResponseHelpers::success($data, 'Checkout berhasil', 201);
 
         } catch (\Exception $e) {
-
-            return ResponseHelpers::error(null, 'Gagal checkout : ' . $e->getMessage());
-
+            return ResponseHelpers::error(null, 'Gagal checkout : ' . $e->getMessage(), 500);
         }
     }
 }

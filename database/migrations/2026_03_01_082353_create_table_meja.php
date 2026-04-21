@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('table_meja', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_table');
             $table->string('table_number');
-            $table->string('qr_code');
-            $table->enum('status',['available','occupied']);
+            $table->string('qr_code')->nullable(); // ✅ Nullable
+            $table->enum('status', ['available', 'occupied']);
             $table->timestamps();
         });
     }

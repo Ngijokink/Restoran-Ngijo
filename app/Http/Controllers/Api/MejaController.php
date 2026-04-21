@@ -9,67 +9,97 @@ use App\Http\Requests\UpdateMejaRequest;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class MejaController extends Controller
 {
     public function index()
     {
-        $meja = Meja::latest()->get();
-
-        return MejaResource::collection($meja);
+        try {
+            $meja = Meja::orderBy('id_table', 'desc')->get();
+            return MejaResource::collection($meja);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mengambil data meja: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function store(StoreMejaRequest $request)
-    {
+{
+    try {
+        // 1. Simpan data meja (pastikan table_number unik agar file tidak tertumpu)
         $meja = Meja::create([
-            'status' => $request->status
+            'status' => $request->status,
+            'table_number' => $request->table_number 
         ]);
 
-        // URL untuk QR
+        // 2. Tentukan nama file & Path
+        // File akan masuk ke: storage/app/public/qrcodes/qr-1.svg
+        $fileName = 'qr-' . $meja->table_number . '.svg';
+        $path = 'qrcodes/' . $fileName;
+
+        // 3. Generate QR Code
         $url = url('/menu/' . $meja->table_number);
-
-        // nama file QR
-        $fileName = 'qr_' . $meja->table_number . '.png';
-
-        // generate QR
-        $qr = QrCode::format('svg')
+        $qrCodeXml = QrCode::format('svg')
             ->size(300)
+            ->margin(1)
             ->generate($url);
 
-        // simpan ke storage
-        Storage::disk('public')->put('qrcodes/' . $fileName, $qr);
+        // 4. Simpan ke storage/app/public/qrcodes
+        // Laravel otomatis membuat folder 'qrcodes' jika belum ada
+        Storage::disk('public')->put($path, $qrCodeXml);
 
-        // update database
+        // 5. Update kolom qr_code dengan path-nya saja
         $meja->update([
-            'qr_code' => 'qrcodes/' . $fileName
+            'qr_code' => $path
         ]);
 
         return new MejaResource($meja);
+
+    } catch (\Exception $e) {
+        Log::error('Meja Store Error: ' . $e->getMessage());
+        return response()->json([
+            'message' => 'Gagal membuat meja: ' . $e->getMessage()
+        ], 500);
     }
+}
 
     public function show(Meja $meja)
     {
-        return new MejaResource($meja);
+        try {
+            return new MejaResource($meja);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mengambil detail meja: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(UpdateMejaRequest $request, Meja $meja)
     {
-        $meja->update($request->validated());
-
-        return new MejaResource($meja);
+        try {
+            $meja->update($request->validated());
+            return new MejaResource($meja);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal mengupdate meja: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy(Meja $meja)
     {
-        // hapus QR jika ada
-        if ($meja->qr_code) {
-            Storage::disk('public')->delete($meja->qr_code);
+        try {
+            $meja->delete();
+
+            return response()->json([
+                'message' => 'Meja berhasil dihapus'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal menghapus meja: ' . $e->getMessage()
+            ], 500);
         }
-
-        $meja->delete();
-
-        return response()->json([
-            'message' => 'Meja berhasil dihapus'
-        ]);
     }
 }

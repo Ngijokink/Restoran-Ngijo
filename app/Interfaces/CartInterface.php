@@ -11,5 +11,5 @@ interface CartInterface
 
     public function deleteItem($cartItemId);
 
-    public function checkout($userId);
+    public function checkout($userId, $tableId = null);
 }
