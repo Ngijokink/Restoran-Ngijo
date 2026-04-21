@@ -8,15 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('table_meja', function (Blueprint $table) {
-            $table->string('qr_code')->nullable()->change();
-        });
+        // Migration ini tidak diperlukan lagi karena qr_code sudah nullable di migration awal
     }
 
     public function down(): void
     {
-        Schema::table('table_meja', function (Blueprint $table) {
-            $table->string('qr_code')->nullable(false)->change();
-        });
+        // Tidak ada yang di-rollback
     }
 };

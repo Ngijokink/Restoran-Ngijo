@@ -20,9 +20,6 @@
         $table->string('order_code');
         $table->enum('status',['pending','confirmed','cooking','done'])->default('pending');
         $table->integer('total_price')->default(0);
-
-
-
         $table->timestamps();
 
         $table->foreign('user_id')
@@ -30,6 +27,10 @@
           ->on('users')
           ->onDelete('cascade');
        
+        $table->foreign('table_id')
+                  ->references('id_table')
+                  ->on('table_meja')
+                  ->onDelete('cascade');
 });
         }
 
@@ -38,6 +39,6 @@
          */
         public function down(): void
         {
-            Schema::dropIfExists('table_orders');
+            Schema::dropIfExists('orders');
         }
     };

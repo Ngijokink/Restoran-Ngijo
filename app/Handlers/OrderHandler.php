@@ -58,6 +58,7 @@ public function createOrder($request)
 
     $order = $this->orderRepo->createOrder([
         'user_id' => auth()->id(),
+        'table_id' => $request->table_id,
         'order_code' => $orderCode,
         'status' => 'pending'
     ]);

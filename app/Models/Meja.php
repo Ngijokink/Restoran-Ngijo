@@ -10,6 +10,9 @@ class Meja extends Model
     use HasFactory;
 
     protected $table = 'table_meja';
+    protected $primaryKey = 'id_table';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'table_number',
@@ -23,7 +26,7 @@ class Meja extends Model
 
         static::creating(function ($meja) {
 
-            $last = Meja::orderBy('id', 'desc')->first();
+            $last = Meja::orderBy('id_table', 'desc')->first();
 
             if ($last) {
                 $number = (int) substr($last->table_number, 4) + 1;

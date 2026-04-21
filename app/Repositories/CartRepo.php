@@ -31,7 +31,6 @@ class CartRepo implements CartInterface
 
     public function addToCart(array $data)
     {
-
         $cart = Cart::firstOrCreate([
             'user_id' => $data['user_id']
         ]);
@@ -39,9 +38,7 @@ class CartRepo implements CartInterface
         $menu = Menu::findOrFail($data['menu_id']);
 
         $qty = $data['qty'];
-
         $price = $menu->price;
-
         $subtotal = $price * $qty;
 
         $existingItem = CartItem::where('id_cart', $cart->id_cart)
@@ -49,7 +46,6 @@ class CartRepo implements CartInterface
             ->first();
 
         if ($existingItem) {
-
             $existingItem->qty += $qty;
             $existingItem->subtotal = $existingItem->qty * $existingItem->price;
             $existingItem->save();
@@ -108,30 +104,35 @@ class CartRepo implements CartInterface
         return true;
     }
 
-    public function checkout($userId)
+    public function checkout($userId, $table_Id = null)
     {
-
-        $cart = Cart::with('items')->where('user_id', $userId)->first();
+        $cart = Cart::with('items', 'table')->where('user_id', $userId)->first();
 
         if (!$cart || $cart->items->isEmpty()) {
             throw new \Exception("Cart kosong");
         }
 
+        if (!$table_Id) {
+            throw new \Exception("table_id harus disertakan saat checkout");
+        }
+
+        // Update table_id di cart
+        $cart->table_id = $table_Id;
+        $cart->save();
+
         $total = $cart->items->sum('subtotal');
 
         $order = Orders::create([
             'user_id' => $userId,
+            'table_id' => $table_Id,
             'total_price' => $total,
             'status' => 'pending',
             'order_code' => 'ORD-' . rand(10000, 99999),
-            
         ]);
 
-        // Link the cart to the created order so payment can update the correct order.
+        // Link the cart to the created order
         $cart->id_order = $order->id_order;
         $cart->save();
-
-       
 
         CartItem::where('id_cart', $cart->id_cart)->delete();
 
