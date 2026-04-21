@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\OrderItemInterface;
-use App\Models\Item;
+use App\Models\CartItem as Item;
 
 class OrderItemRepo implements OrderItemInterface
 {
